@@ -1,0 +1,13 @@
+{
+  "name": "postShuffle",
+  "description": "node.js based forum software",
+  "version": "1.0.0",
+  "author": "Mooneer Salem <mooneer@gmail.com>",
+  "contributors": [ 
+  ],
+  "dependencies": {
+    "express": ">=3.0"
+  },
+  "repository": "git://github.com/tmiw/postShuffle",
+  "engines": { "node": "*" }
+}
