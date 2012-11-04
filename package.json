@@ -9,5 +9,6 @@
     "express": ">=3.0"
   },
   "repository": "git://github.com/tmiw/postShuffle",
-  "engines": { "node": "*" }
+  "engines": { "node": "*" },
+  "main": "main.js"
 }
