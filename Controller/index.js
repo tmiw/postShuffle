@@ -5,24 +5,26 @@ var ControllerBase = require("../Utility/ControllerBase");
 var Home           = require("./Home");
 var util           = require("util");
 
-/**
- * Creates new Controller object.
- * @param {Object} app Express app object.
- * @return {Object} The new object.
- */
-var Controller = function(app) {
-    ControllerBase.call(this, app);
+module.exports = (function() {
+    /**
+     * Creates new Controller object.
+     * @param {Object} app Express app object.
+     * @return {Object} The new object.
+     */
+    var Controller = function(app) {
+        Controller.super_.call(this, app);
+        
+        this.Home = new Home(app);
+    };
     
-    this.Home = new Home(app);
-};
-
-util.inherits(Controller, ControllerBase);
-
-/**
- * Links controller's routes to application.
- */
-Controller.prototype.link_routes = function() { 
-    this.Home.link_routes();
-};
-
-module.exports = Controller;
+    util.inherits(Controller, ControllerBase);
+    
+    /**
+     * Links controller's routes to application.
+     */
+    Controller.prototype.link_routes = function() { 
+        this.Home.link_routes();
+    };
+    
+    return Controller;
+})();

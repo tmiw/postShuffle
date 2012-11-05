@@ -12,7 +12,7 @@ module.exports = (function() {
      * @return {Object} The new object.
      */
     var Home = function(app) {
-        ControllerBase.call(this, app);
+        Home.super_.call(this, app);
     };
     
     util.inherits(Home, ControllerBase);
@@ -26,7 +26,7 @@ module.exports = (function() {
         
         // Need a better way to do this. Would like to share logic between 
         // JSON output (for AJAX) and standard HTML.
-        this.__app.get("/", this.json(Home.prototype.get_front_page_posts));
+        this.__app.get("/", this.json(this.get_front_page_posts));
     };
     
     /**
@@ -55,14 +55,17 @@ module.exports = (function() {
      * @return {Array} The list of posts.
      */
     Home.prototype.get_front_page_posts = function(tag_list, offset) {
+        var self = this;
+        
         DataModel.Posts.findAll({
             'offset': offset, 
             'limit': 20}).success(function(list) {
-                this.emitSuccess({
+                self.emitSuccess({
                     'posts': list
                 });
             });
-        return this;
+        
+        return self;
     };
     
     return Home;

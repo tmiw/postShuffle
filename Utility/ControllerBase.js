@@ -11,7 +11,7 @@ var events = require("events");
  */
 module.exports = (function() {
     var ControllerBase = function(f) {
-        events.EventEmitter.call(this);
+        ControllerBase.super_.call(this);
         this.__app = f;
     };
 
@@ -39,11 +39,16 @@ module.exports = (function() {
      * @param {Function} fn The function to call.
      */
     ControllerBase.prototype.json = function(fn) {
+        var self = this;
+        
         return function(req, res) {
             // TBD: should wrap returned data and/or perform preprocessing
             // of input JSON.
-            fn().success(function(data) { 
-                res.send(data); 
+            fn.call(self).success(function(data) { 
+                res.send({
+                    'status': 'ok',
+                    'result': data
+                }); 
             });
         };
     };
