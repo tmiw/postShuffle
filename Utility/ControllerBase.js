@@ -1,19 +1,27 @@
 // postShuffle -- web forum software for node.js
 // Copyright (c) 2012 Mooneer Salem
 
-/**
- * Links controller's routes to application.
- */
-var link_routes = function() {
-    throw "not implemented";
-};
+var   util   = require("util")
+    , events = require("events");
 
 /**
  * Creates new Controller object.
  * @param {Object} app Express app object.
  * @return {Object} The new object.
  */
-module.exports = function(app) {
+var ControllerBase = function(app) {
+    events.EventEmitter.call(this);
     this.__app = app;
-    this.link_routes = link_routes;
 };
+
+// Inherits EventEmitter for event handling.
+util.inherits(ControllerBase, events.EventEmitter);
+
+/**
+ * Links controller's routes to application.
+ */
+ControllerBase.prototype.link_routes = function() {
+    throw "not implemented";
+};
+
+module.exports = ControllerBase;
