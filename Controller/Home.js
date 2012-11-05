@@ -56,14 +56,29 @@ module.exports = (function() {
      */
     Home.prototype.get_front_page_posts = function(tag_list, offset) {
         var self = this;
-        
-        DataModel.Posts.findAll({
+        var query = {
             'offset': offset, 
-            'limit': 20}).success(function(list) {
+            'limit': 20
+        };
+        
+        var success_f = function(list) {
                 self.emitSuccess({
                     'posts': list
                 });
-            });
+            };
+        
+        if (tag_list)
+        {
+            query.include = [ 'Tag' ];
+            query.where = {
+                'Tags.tag': tag_list
+            };
+            DataModel.Posts.findAll(query).success(success_f);
+        }
+        else
+        {
+            DataModel.Posts.findAll(query).success(success_f);
+        }
         
         return self;
     };
