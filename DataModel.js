@@ -10,6 +10,14 @@ var db = new Sequelize(config.Database.name, config.Database.username, config.Da
 });
 
 // Tables.
+exports.Users = db.define('User', {
+    'username': Sequelize.STRING,
+    'password': Sequelize.STRING,
+    'is_moderator': Sequelize.BOOLEAN,
+    'is_admin': Sequelize.BOOLEAN,
+    'title': Sequelize.STRING
+});
+
 exports.Posts = db.define('Post', {
     'title': Sequelize.STRING,
     'body': Sequelize.TEXT
@@ -24,9 +32,11 @@ exports.Comments = db.define('Comment', {
 });
 
 // Associations.
+exports.Users.hasMany(exports.Comments);
+exports.Users.hasMany(exports.Posts);
 exports.Posts.hasMany(exports.Tags);
 exports.Posts.hasMany(exports.Comments);
-exports.Tags.hasMany(exports.Posts)
+exports.Tags.hasMany(exports.Posts);
 exports.Comments.hasOne(exports.Comments, {'as': 'Parent'});
 
 db.sync();

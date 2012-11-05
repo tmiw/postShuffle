@@ -18,7 +18,7 @@ var show_without_name = function(req, res) {
  * @param {Object} res Response object.
  */
 var show_with_name = function(req, res) {
-    res.send("hai " + req.params["name"]);
+    res.send("hai " + req.params.name);
 };
 
 /**
