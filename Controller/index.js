@@ -1,9 +1,9 @@
 // postShuffle -- web forum software for node.js
 // Copyright (c) 2012 Mooneer Salem
 
-var   Home           = require("./Home")
-    , ControllerBase = require("../Utility/ControllerBase")
-    , util           = require("util");
+var ControllerBase = require("../Utility/ControllerBase");
+var Home           = require("./Home");
+var util           = require("util");
 
 /**
  * Creates new Controller object.
