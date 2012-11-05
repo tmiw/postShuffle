@@ -22,4 +22,4 @@ module.exports = function(app) {
     that.link_routes = link_routes;
     
     return that;
-}
+};

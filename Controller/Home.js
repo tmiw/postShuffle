@@ -2,6 +2,7 @@
 // Copyright (c) 2012 Mooneer Salem
 
 var ControllerBase = require("../Utility/ControllerBase");
+var DataModel = require("../DataModel");
 
 /**
  * Shows greeting without the person's name.
@@ -22,11 +23,30 @@ var show_with_name = function(req, res) {
 };
 
 /**
+ * Retrieves posts for the front page, given a list of tags
+ * and an offset.
+ * @param {Array} tag_list A list of tags.
+ * @param {Integer} offset The number of posts to skip.
+ * @return {Array} The list of posts.
+ */
+var get_front_page_posts = function(tag_list, offset) {
+    DataModel.Posts.findAll({
+        'offset': offset, 
+        'limit': 20}).success(function(list) {
+            return list;
+        });
+};
+
+/**
  * Links controller's routes to application.
  */
 var link_routes = function() {
-    this.__app.get("/", this.__show_without_name);
-    this.__app.get("/:name", this.__show_with_name);  
+    /*this.__app.get("/", this.__show_without_name);
+    this.__app.get("/:name", this.__show_with_name);  */
+    
+    // Need a better way to do this. Would like to share logic between 
+    // JSON output (for AJAX) and standard HTML.
+    this.__app.get("/", function(req, res) { res.send(get_front_page_posts([], 0)); });
 };
 
 /**
