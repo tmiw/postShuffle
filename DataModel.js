@@ -6,7 +6,8 @@ var Sequelize = require('sequelize');
 
 var config = new AppConfig();
 var db = new Sequelize(config.Database.name, config.Database.username, config.Database.password, {
-    'dialect': config.Database.type
+    'dialect': config.Database.type,
+    'storage': config.Database.name + ".db"
 });
 
 // Tables.
@@ -36,6 +37,7 @@ exports.Users.hasMany(exports.Comments);
 exports.Users.hasMany(exports.Posts);
 exports.Posts.hasMany(exports.Tags);
 exports.Posts.hasMany(exports.Comments);
+exports.Posts.belongsTo(exports.Users);
 exports.Tags.hasMany(exports.Posts);
 exports.Comments.hasOne(exports.Comments, {'as': 'Parent'});
 

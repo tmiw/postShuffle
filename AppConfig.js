@@ -7,7 +7,7 @@ var settings = function() {
     if (debugMode)
     {
         this.Database = {
-            'name': 'postshuffle.db',
+            'name': 'postshuffle',
             'type': 'sqlite',
             'username': '',
             'password': ''
