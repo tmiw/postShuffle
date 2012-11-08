@@ -61,64 +61,68 @@ module.exports = (function() {
             'limit': 20
         };
         
+        var failure_f = function(err) {
+            self.emitFailure(err);
+        };
+        
         var success_f = function(list) {
-                var result = [];
-                var tag_f = function(idx, tags) {
-                    var tag_strings = [];
-                    
-                    for (var i in tags)
-                    {
-                        tag_strings.push(tags[i].tag);
-                    }
-                    
-                    list[idx].getUser().success(function(u) {
-                        list[idx].getComments().success(function(c) {
-                            result.push({
-                                'tags': tag_strings,
-                                'title': list[idx].title,
-                                'author': {
-                                    'username': u.username,
-                                    'title': u.title,
-                                    'is_moderator': u.is_moderator,
-                                    'is_admin': u.is_admin,
-                                    'joined': u.createdAt
-                                },
-                                'body': list[idx].body,
-                                'id': list[idx].id,
-                                'create_date': list[idx].createdAt,
-                                'update_date': list[idx].updatedAt,
-                                'num_comments': c.length
-                            });
-                            
-                            if (idx + 1 < list.length)
-                            {
-                                list[idx + 1].getTags().success(function(v) {
-                                    tag_f(idx + 1, v);
-                                });
-                            }
-                            else 
-                            {
-                                self.emitSuccess({
-                                    'posts': result
-                                });
-                            }
-                        });
-                    });
-                };
+            var result = [];
+            var tag_f = function(idx, tags) {
+                var tag_strings = [];
                 
-                // recursive. not sure if this is good for large result sets.
-                if (list.length > 0)
+                for (var i in tags)
                 {
-                    list[0].getTags().success(function(v) {
-                        tag_f(0, v);
-                    });
+                    tag_strings.push(tags[i].tag);
                 }
-                else 
-                {
-                    self.emitSuccess({
-                        'posts': result
-                    });
-                }
+                
+                list[idx].getUser().success(function(u) {
+                    list[idx].getComments().success(function(c) {
+                        result.push({
+                            'tags': tag_strings,
+                            'title': list[idx].title,
+                            'author': {
+                                'username': u.username,
+                                'title': u.title,
+                                'is_moderator': u.is_moderator,
+                                'is_admin': u.is_admin,
+                                'joined': u.createdAt
+                            },
+                            'body': list[idx].body,
+                            'id': list[idx].id,
+                            'create_date': list[idx].createdAt,
+                            'update_date': list[idx].updatedAt,
+                            'num_comments': c.length
+                        });
+                        
+                        if (idx + 1 < list.length)
+                        {
+                            list[idx + 1].getTags().success(function(v) {
+                                tag_f(idx + 1, v);
+                            }).error(failure_f);
+                        }
+                        else 
+                        {
+                            self.emitSuccess({
+                                'posts': result
+                            });
+                        }
+                    }).error(failure_f);
+                }).error(failure_f);
+            };
+            
+            // recursive. not sure if this is good for large result sets.
+            if (list.length > 0)
+            {
+                list[0].getTags().success(function(v) {
+                    tag_f(0, v);
+                }).error(failure_f);
+            }
+            else 
+            {
+                self.emitSuccess({
+                    'posts': result
+                });
+            }
         };
         
         if (tag_list)
@@ -127,11 +131,11 @@ module.exports = (function() {
             query.where = {
                 'Tags.tag': tag_list
             };
-            DataModel.Posts.findAll(query).success(success_f);
+            DataModel.Posts.findAll(query).success(success_f).error(failure_f);
         }
         else
         {
-            DataModel.Posts.findAll(query).success(success_f);
+            DataModel.Posts.findAll(query).success(success_f).error(failure_f);
         }
         
         return self;

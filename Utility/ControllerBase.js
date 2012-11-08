@@ -35,6 +35,15 @@ module.exports = (function() {
     };
     
     /**
+     * Provides a failure event handler to controller.
+     * @param {Function} fxn The function to execute.
+     */
+    ControllerBase.prototype.failure = function(fxn) {
+        this.on('failure', fxn);
+        return this;
+    };
+    
+    /**
      * Wraps JSON handling around the given action.
      * @param {Function} fn The function to call.
      */
@@ -44,12 +53,26 @@ module.exports = (function() {
         return function(req, res) {
             // TBD: should wrap returned data and/or perform preprocessing
             // of input JSON.
-            fn.call(self).success(function(data) { 
-                res.send({
-                    'status': 'ok',
-                    'result': data
-                }); 
-            });
+            var fail_f = function(err) {
+                res.send(500, {
+                    'status': 'fail',
+                    'error': err
+                });
+            };
+            
+            try
+            {
+                fn.call(self).success(function(data) { 
+                    res.send({
+                        'status': 'ok',
+                        'result': data
+                    }); 
+                }).failure(fail_f);
+            } 
+            catch (err) 
+            {
+                fail_f(err);
+            }
         };
     };
     
@@ -59,6 +82,14 @@ module.exports = (function() {
      */
     ControllerBase.prototype.emitSuccess = function(data) {
         this.emit('success', data);    
+    };
+    
+    /**
+     * Emits a failure event given result data.
+     * @param {Object} data The data to pass to the event handler.
+     */
+    ControllerBase.prototype.emitFailure = function(data) {
+        this.emit('failure', data);    
     };
     
     return ControllerBase;
