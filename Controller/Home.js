@@ -23,29 +23,29 @@ module.exports = (function() {
     Home.prototype.link_routes = function() {
         /*this.__app.get("/", this.__show_without_name);
         this.__app.get("/:name", this.__show_with_name);  */
+        var self = this;
         
         // Need a better way to do this. Would like to share logic between 
         // JSON output (for AJAX) and standard HTML.
         this.__app.get("/json", this.json(this.get_front_page_posts));
-        this.__app.get("/", this.html(this.get_front_page_posts, 'index', 'PostShuffle: home'));
-    };
-    
-    /**
-     * Shows greeting without the person's name.
-     * @param {Object} req Request object.
-     * @param {Object} res Response object.
-     */
-    Home.prototype.show_without_name = function(req, res) {
-        res.send("hai");
-    };
-    
-    /**
-     * Shows greeting with the person's name.
-     * @param {Object} req Request object.
-     * @param {Object} res Response object.
-     */
-    Home.prototype.show_with_name = function(req, res) {
-        res.send("hai " + req.params.name);
+        this.__app.get(
+            "/", 
+            this.html(
+                this.get_front_page_posts, 
+                'index', 
+                'PostShuffle: home'));
+                
+        this.__app.get(
+            /^\/(\w+)(?:\/(\w+))*$/,
+           function(req, res)
+            {
+                self.get_front_page_posts(req.params, 0).success(function(data) {
+                    res.render('index', {
+                        'title': 'PostShuffle: home',
+                        'data': JSON.stringify(data)
+                    });
+                });
+            });
     };
     
     /**
@@ -55,7 +55,7 @@ module.exports = (function() {
      * @param {Integer} offset The number of posts to skip.
      * @return {Array} The list of posts.
      */
-    Home.prototype.get_front_page_posts = function(tag_list, offset) {
+    Home.prototype.get_front_page_posts = function(tag_list, offset) {        
         var self = this;
         var query = {
             'offset': offset, 

@@ -85,7 +85,14 @@ $(function(){
         },
         
         addAll: function() {
-          window.Posts.each(this.addOne);
+            if (window.Posts.length > 0)
+            {
+                window.Posts.each(this.addOne);
+            }
+            else
+            {
+                this.$("#postList").append(_.template($('#noPostTemplate').html()));
+            }
         },
         
         clearCompleted: function() {
