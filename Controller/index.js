@@ -24,6 +24,12 @@ module.exports = (function() {
      */
     Controller.prototype.link_routes = function() { 
         this.Home.link_routes();
+        
+        this.__app.get(
+            /^\/static\/js\/backbone-min.js$/, 
+            function (req, res) {
+                res.sendfile("node_modules/backbone/backbone-min.js");
+            });
     };
     
     return Controller;
