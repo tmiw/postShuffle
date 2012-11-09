@@ -5,6 +5,7 @@ var express = require('express');
 var app = express();
 var Controller = require(__dirname + '/Controller');
 var AppConfig = require('./AppConfig.js');
+var consolidate = require('consolidate');
 
 // Load config
 var config = new AppConfig();
@@ -15,6 +16,11 @@ require(__dirname + '/DataModel');
 // Initialize controller.
 var controller = new Controller(app);
 controller.link_routes();
+
+// Initialize template engine.
+app.enigne(consolidate.mustache);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/templates');
 
 // Initialize Express middleware.
 app.use(express.compress());
