@@ -22,6 +22,8 @@ var settings = function() {
             'password': 'INSERT_PASSWORD_HERE'
         };
     }
+    
+    this.sessionSecret = "cookie monster";
 };
 
 module.exports = settings;
