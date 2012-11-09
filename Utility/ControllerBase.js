@@ -89,7 +89,7 @@ module.exports = (function() {
             fn.call(self).success(function(data) { 
                 res.render(template, {
                     'title': title,
-                    'data': data
+                    'data': JSON.stringify(data)
                 });
             });
         };

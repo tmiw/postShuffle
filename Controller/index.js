@@ -25,12 +25,24 @@ module.exports = (function() {
     Controller.prototype.link_routes = function() { 
         this.Home.link_routes();
         
-        // Map URL path for backbone to our node_modules folder
+        this.__app.get(
+            /^\/static\/js\/postshuffle-client.js$/, 
+            function (req, res) {
+                res.sendfile("static/js/postshuffle-client.js");
+            });
+            
+        // Map URL path for backbone/underscore to our node_modules folder
         // so that npm can track this for us.
         this.__app.get(
-            /^\/static\/js\/backbone-min.js$/, 
+            /^\/static\/js\/backbone.js$/, 
             function (req, res) {
-                res.sendfile("node_modules/backbone/backbone-min.js");
+                res.sendfile("node_modules/backbone/backbone.js");
+            });
+        
+        this.__app.get(
+            /^\/static\/js\/underscore.js$/, 
+            function (req, res) {
+                res.sendfile("node_modules/backbone/node_modules/underscore/underscore.js");
             });
     };
     
