@@ -1,0 +1,15 @@
+h1 { font-family: 'Arbutus Slab', serif; }
+
+body { font-family: 'Open Sans', sans-serif; }
+
+ul#postList {
+    border: 1px solid black;
+}
+
+li.post {
+    list-style-type: none;
+}
+
+li.post .postTitle {
+    font-weight: bold;
+}

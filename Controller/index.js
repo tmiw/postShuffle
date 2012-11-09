@@ -25,6 +25,13 @@ module.exports = (function() {
     Controller.prototype.link_routes = function() { 
         this.Home.link_routes();
         
+        // TODO: static middleware should be handling these.
+        this.__app.get(
+            /^\/static\/css\/layout.css$/, 
+            function (req, res) {
+                res.sendfile("static/css/layout.css");
+            });
+        
         this.__app.get(
             /^\/static\/js\/postshuffle-client.js$/, 
             function (req, res) {

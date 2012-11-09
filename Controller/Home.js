@@ -27,7 +27,7 @@ module.exports = (function() {
         // Need a better way to do this. Would like to share logic between 
         // JSON output (for AJAX) and standard HTML.
         this.__app.get("/json", this.json(this.get_front_page_posts));
-        this.__app.get("/", this.html(this.get_front_page_posts, 'index', 'hello world'));
+        this.__app.get("/", this.html(this.get_front_page_posts, 'index', 'PostShuffle: home'));
     };
     
     /**

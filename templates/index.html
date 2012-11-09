@@ -4,6 +4,9 @@
     <script language="javascript" src="/static/js/underscore.js"></script>
     <script language="javascript" src="/static/js/backbone.js"></script>
     <script language="javascript" src="/static/js/postshuffle-client.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Arbutus+Slab' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link href="/static/css/layout.css" rel="stylesheet" type="text/css" />
     <title>{{ title }}</title>
     <script language="javascript">
     <!--
@@ -16,19 +19,21 @@
 </head>
 <body>
 
+<h1>Front Page</h1>
+
 <div id="app">
     <ul id="postList">
     </ul>
 </div>
 
 <script type="text/template" id="postTemplate">
-<div class="postTitle"><%- title %></div>
-<div class="postAuthor"><%- author.username %></div>
-<ul class="postTags">
+<div class="postTitle"><a href="#"><%- title %></a></div>
+<div class="postAuthor">by <%- author.username %>, <%- author.title %></div>
+<!--<ul class="postTags">
     <% _.each(tags, function(tag) { %>
         <li class="postTag"><%- tag %></li>
     <% }) %>
-</ul>
+</ul>-->
 </script>
 </body>
 </html>
