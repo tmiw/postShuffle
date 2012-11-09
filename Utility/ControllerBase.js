@@ -77,6 +77,25 @@ module.exports = (function() {
     };
     
     /**
+     * Wraps HTML handling around the given action.
+     * @param {Function} fn The function to call.
+     * @param {String} template The name of the template to use.
+     * @param {String} title The page's title.
+     */
+    ControllerBase.prototype.html = function(fn, template, title) {
+        var self = this;
+        
+        return function(req, res) {
+            fn.call(self).success(function(data) { 
+                res.render(template, {
+                    'title': title,
+                    'data': data
+                });
+            });
+        };
+    };
+    
+    /**
      * Emits a success event given result data.
      * @param {Object} data The data to pass to the event handler.
      */

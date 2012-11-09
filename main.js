@@ -18,7 +18,7 @@ var controller = new Controller(app);
 controller.link_routes();
 
 // Initialize template engine.
-app.enigne(consolidate.mustache);
+app.engine('html', consolidate.mustache);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/templates');
 
