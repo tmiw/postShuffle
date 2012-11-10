@@ -28,12 +28,14 @@ li.post .postTitle {
 li.post .postRight {
     float: right;
     width: 27%;
+    text-align: right;
 }
 
 li.post .postTags {
     padding: 0;
     margin-left: 0;
     display: inline;
+    font-size: 10pt;
 }
 
 li.post .postTag {
@@ -41,4 +43,14 @@ li.post .postTag {
     list-style-type: none;
     background-color: black;
     color: white;
+}
+
+li.post .postTag a {
+    color: white;
+    text-decoration: none;
+}
+
+li.post .postTag a:hover {
+    color: white;
+    text-decoration: underline;
 }

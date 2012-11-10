@@ -35,7 +35,7 @@
         </div>
         Tags: <ul class="postTags">
             <% _.each(tags, function(tag) { %>
-                <li class="postTag"><%- tag %></li>
+                <li class="postTag"><a href="<%= tag %>"><%- tag %></a></li>
             <% }) %>
         </ul>
     </div>
