@@ -2,12 +2,23 @@ h1 { font-family: 'Arbutus Slab', serif; }
 
 body { font-family: 'Open Sans', sans-serif; }
 
-ul#postList {
+/*ul#postList {
     border: 1px solid black;
-}
+}*/
 
 li.post {
     list-style-type: none;
+}
+
+li.post .postHeader {
+    border: 2px solid black;    
+}
+
+li.post .postBody {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    display: none;
 }
 
 li.post .postTitle {

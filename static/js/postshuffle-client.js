@@ -47,6 +47,10 @@ $(function(){
         
         className: 'post',
         
+        events: {
+            'click .postTitle': 'expandBody'
+        },
+        
         template: _.template($('#postTemplate').html()),
     
         initialize: function() {
@@ -61,8 +65,19 @@ $(function(){
         render: function() {
           this.$el.html(this.template(this.model.toJSON()));
           return this;
-        }
+        },
         
+        expandBody: function() {
+            this.$('.postBody').css('display', 'block');
+            this.events['click .postTitle'] = 'hideBody';
+            this.delegateEvents();
+        },
+        
+        hideBody: function() {
+            this.$('.postBody').css('display', 'none');
+            this.events['click .postTitle'] = 'expandBody';
+            this.delegateEvents();
+        }
     });
     
     var PostListView = Backbone.View.extend({
