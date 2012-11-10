@@ -90,8 +90,8 @@ module.exports = (function() {
                             },
                             'body': list[idx].body,
                             'id': list[idx].id,
-                            'create_date': list[idx].createdAt,
-                            'update_date': list[idx].updatedAt,
+                            'create_date': list[idx].createdAt.toUTCString(),
+                            'update_date': list[idx].updatedAt.toUTCString(),
                             'num_comments': c.length
                         });
                         

@@ -28,13 +28,21 @@
 
 <script type="text/template" id="postTemplate">
 <div class="postHeader">
-    <div class="postTitle"><a href="#"><%- title %></a></div>
-    <div class="postAuthor">by <%- author.username %>, <%- author.title %></div>
-    <!--<ul class="postTags">
-        <% _.each(tags, function(tag) { %>
-            <li class="postTag"><%- tag %></li>
-        <% }) %>
-    </ul>-->
+    <div class="postRight">
+        <div class="postDate">
+            <%- new Date(create_date).toLocaleDateString() %> 
+            <%- new Date(create_date).toLocaleTimeString() %>
+        </div>
+        Tags: <ul class="postTags">
+            <% _.each(tags, function(tag) { %>
+                <li class="postTag"><%- tag %></li>
+            <% }) %>
+        </ul>
+    </div>
+    <div class="postLeft">
+        <div class="postTitle"><a href="#"><%- title %></a></div>
+        <div class="postAuthor">by <%- author.username %>, <%- author.title %></div>
+    </div>
 </div>
 <div class="postBody">
     <div class="bodyText"><%- body %></div>

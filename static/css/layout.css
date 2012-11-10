@@ -24,3 +24,21 @@ li.post .postBody {
 li.post .postTitle {
     font-weight: bold;
 }
+
+li.post .postRight {
+    float: right;
+    width: 27%;
+}
+
+li.post .postTags {
+    padding: 0;
+    margin-left: 0;
+    display: inline;
+}
+
+li.post .postTag {
+    display: inline;
+    list-style-type: none;
+    background-color: black;
+    color: white;
+}
