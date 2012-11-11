@@ -29,6 +29,10 @@ $(function(){
             };
         },
         
+        parse: function(resp, xhr) {
+            return resp.result;
+        },
+        
         initialize: function() { },
         
     });
