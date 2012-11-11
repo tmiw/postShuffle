@@ -17,8 +17,8 @@ app.use(express.cookieParser(config.sessionSecret));
 app.use(express.cookieSession({
     secret: config.sessionSecret
 }));
-app.use(express.directory(__dirname + 'static'));
-app.use(express.static(__dirname + 'static'));
+app.use('/static', express.directory(__dirname + '/static'));
+app.use('/static', express.static(__dirname + '/static'));
 
 // Triggers initialization of database.
 require(__dirname + '/DataModel');
