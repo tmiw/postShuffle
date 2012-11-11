@@ -27,14 +27,14 @@ module.exports = (function() {
         // JSON output (for AJAX) and standard HTML.
         this.__app.get("/json", this.json(this.get_front_page_posts));
         this.__app.get(
-            "/", 
+            /^\/$/, 
             this.html(
                 this.get_front_page_posts, 
                 'index', 
                 'PostShuffle: home'));
                 
         this.__app.get(
-            /^\/(\w+)(?:\/(\w+))*$/,
+            /^\/t\/(\w+)(?:\/(\w+))*$/,
            function(req, res)
             {
                 self.get_front_page_posts({

@@ -26,6 +26,7 @@ module.exports = (function() {
      */
     Controller.prototype.link_routes = function() { 
         this.Home.link_routes();
+        this.Post.link_routes();
         
         // TODO: static middleware should be handling these.
         this.__app.get(
