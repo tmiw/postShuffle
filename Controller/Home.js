@@ -21,8 +21,6 @@ module.exports = (function() {
      * Links controller's routes to application.
      */
     Home.prototype.link_routes = function() {
-        /*this.__app.get("/", this.__show_without_name);
-        this.__app.get("/:name", this.__show_with_name);  */
         var self = this;
         
         // Need a better way to do this. Would like to share logic between 
@@ -39,7 +37,10 @@ module.exports = (function() {
             /^\/(\w+)(?:\/(\w+))*$/,
            function(req, res)
             {
-                self.get_front_page_posts(req.params, 0).success(function(data) {
+                self.get_front_page_posts({
+                    'tag_list': req.params, 
+                    'offset': 0
+                    }, req.session).success(function(data) {
                     res.render('index', {
                         'title': 'PostShuffle: home',
                         'data': JSON.stringify(data)
@@ -51,12 +52,15 @@ module.exports = (function() {
     /**
      * Retrieves posts for the front page, given a list of tags
      * and an offset.
-     * @param {Array} tag_list A list of tags.
-     * @param {Integer} offset The number of posts to skip.
+     * @param {Object} json_args Dictionary of arguments (offset and tag_list).
+     * @param {Object} session_data Session data.
      * @return {Array} The list of posts.
      */
-    Home.prototype.get_front_page_posts = function(tag_list, offset) {        
+    Home.prototype.get_front_page_posts = function(json_args, session_data) {
         var self = this;
+        var tag_list = json_args['tag_list'] || [];
+        var offset = json_args['offset'] || 0;
+        
         var query = {
             'offset': offset, 
             'limit': 20
@@ -126,7 +130,7 @@ module.exports = (function() {
             }
         };
         
-        if (tag_list)
+        if (tag_list.length > 0)
         {
             query.include = [ 'Tag' ];
             query.where = {

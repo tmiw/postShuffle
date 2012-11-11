@@ -3,6 +3,7 @@
 
 var ControllerBase = require("../Utility/ControllerBase");
 var Home           = require("./Home");
+var Post           = require("./Post");
 var util           = require("util");
 
 module.exports = (function() {
@@ -15,6 +16,7 @@ module.exports = (function() {
         Controller.super_.call(this, app);
         
         this.Home = new Home(app);
+        this.Post = new Post(app);
     };
     
     util.inherits(Controller, ControllerBase);

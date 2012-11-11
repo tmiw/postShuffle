@@ -62,7 +62,7 @@ module.exports = (function() {
             
             try
             {
-                fn.call(self).success(function(data) { 
+                fn.call(self, req.body, req.session).success(function(data) { 
                     res.send({
                         'status': 'ok',
                         'result': data
@@ -86,7 +86,7 @@ module.exports = (function() {
         var self = this;
         
         return function(req, res) {
-            fn.call(self).success(function(data) { 
+            fn.call(self, {}, req.session).success(function(data) { 
                 res.render(template, {
                     'title': title,
                     'data': JSON.stringify(data)
