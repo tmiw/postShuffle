@@ -27,19 +27,6 @@ module.exports = (function() {
     Controller.prototype.link_routes = function() { 
         this.Home.link_routes();
         this.Post.link_routes();
-        
-        // TODO: static middleware should be handling these.
-        this.__app.get(
-            /^\/static\/css\/layout.css$/, 
-            function (req, res) {
-                res.sendfile("static/css/layout.css");
-            });
-        
-        this.__app.get(
-            /^\/static\/js\/postshuffle-client.js$/, 
-            function (req, res) {
-                res.sendfile("static/js/postshuffle-client.js");
-            });
             
         // Map URL path for backbone/underscore to our node_modules folder
         // so that npm can track this for us.
