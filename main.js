@@ -10,6 +10,16 @@ var consolidate = require('consolidate');
 // Load config
 var config = new AppConfig();
 
+// Initialize Express middleware.
+app.use(express.compress());
+app.use(express.bodyParser());
+app.use(express.cookieParser(config.sessionSecret));
+app.use(express.cookieSession({
+    secret: config.sessionSecret
+}));
+app.use(express.directory(__dirname + 'static'));
+app.use(express.static(__dirname + 'static'));
+
 // Triggers initialization of database.
 require(__dirname + '/DataModel');
 
@@ -21,16 +31,6 @@ controller.link_routes();
 app.engine('html', consolidate.mustache);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/templates');
-
-// Initialize Express middleware.
-app.use(express.compress());
-app.use(express.bodyParser());
-app.use(express.cookieParser(config.sessionSecret));
-app.use(express.cookieSession({
-    secret: config.sessionSecret
-}));
-app.use(express.directory('static'));
-app.use(express.static('static'));
 
 // Begin listening for connections.
 app.listen(process.env.PORT);

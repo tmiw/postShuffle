@@ -21,7 +21,7 @@ module.exports = (function() {
      * Links controller's routes to application.
      */
     Post.prototype.link_routes = function() {
-        this.__app.post("/json/post", this.json(this.add_new_post));
+        this.__app.put("/post", this.json(this.add_new_post));
     };
     
     /**

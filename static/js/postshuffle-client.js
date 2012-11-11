@@ -37,6 +37,8 @@ $(function(){
         
         model: Post,
         
+        url: '/post'
+        
     });
     
     window.Posts = new PostList();
@@ -92,7 +94,19 @@ $(function(){
     
         },
     
-        render: function() { },
+        events: {
+            'click .addPostButton': 'submitNewPost'
+        },
+        
+        render: function() {
+        },
+        
+        submitNewPost: function() {
+            window.Posts.create({
+                title: $('#newPostForm #title').val(),
+                body: $('#newPostForm #body').val()
+            });
+        },
         
         addOne: function(item) {
           var view = new PostView({model: item});
