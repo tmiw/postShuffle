@@ -107,7 +107,8 @@ module.exports = (function() {
         
         var query = {
             'offset': offset, 
-            'limit': 5
+            'limit': 5,
+            'order': 'createdAt DESC'
         };
         
         var failure_f = function(err) {
