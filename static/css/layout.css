@@ -54,3 +54,10 @@ li.post .postTag a:hover {
     color: white;
     text-decoration: underline;
 }
+
+img#spinner {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: none;
+}

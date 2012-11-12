@@ -6,6 +6,18 @@ function loadInitialPosts(jsonData)
     window.Posts.reset(jsonData.posts);
 }
 
+// Set up AJAX spinner.
+$.ajaxSetup({
+    beforeSend:function(){
+        // show gif here, eg:
+        $("#loading").show();
+    },
+    complete:function(){
+        // hide gif here, eg:
+        $("#loading").hide();
+    }
+});
+
 $(function(){
     
     var Post = Backbone.Model.extend({
@@ -109,7 +121,7 @@ $(function(){
             window.Posts.create({
                 title: $('#newPostForm #title').val(),
                 body: $('#newPostForm #body').val()
-            });
+            }, {wait: true});
         },
         
         addOne: function(item) {
