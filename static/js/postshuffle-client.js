@@ -10,11 +10,11 @@ function loadInitialPosts(jsonData)
 $.ajaxSetup({
     beforeSend:function(){
         // show gif here, eg:
-        $("#loading").show();
+        $("#spinner").show();
     },
     complete:function(){
         // hide gif here, eg:
-        $("#loading").hide();
+        $("#spinner").hide();
     }
 });
 
