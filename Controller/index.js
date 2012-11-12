@@ -2,7 +2,6 @@
 // Copyright (c) 2012 Mooneer Salem
 
 var ControllerBase = require("../Utility/ControllerBase");
-var Home           = require("./Home");
 var Post           = require("./Post");
 var util           = require("util");
 
@@ -14,8 +13,7 @@ module.exports = (function() {
      */
     var Controller = function(app) {
         Controller.super_.call(this, app);
-        
-        this.Home = new Home(app);
+
         this.Post = new Post(app);
     };
     
@@ -25,7 +23,6 @@ module.exports = (function() {
      * Links controller's routes to application.
      */
     Controller.prototype.link_routes = function() { 
-        this.Home.link_routes();
         this.Post.link_routes();
             
         // Map URL path for backbone/underscore to our node_modules folder
