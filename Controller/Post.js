@@ -53,7 +53,7 @@ module.exports = (function() {
      * @param {Object} session_data Current session data.
      * @returns {Array} Data corresponding to the new post.
      */
-    Post.prototype.add_new_post = function(json_args, session_data) {
+    Post.prototype.add_new_post = function(json_args, session_data, query_args) {
         var self = this;
         
         if (!json_args.title || !json_args.body)
@@ -100,14 +100,14 @@ module.exports = (function() {
      * @param {Object} session_data Session data.
      * @return {Array} The list of posts.
      */
-    Post.prototype.get_posts = function(json_args, session_data) {
+    Post.prototype.get_posts = function(json_args, session_data, query_args) {
         var self = this;
-        var tag_list = json_args['tag_list'] || [];
-        var offset = json_args['offset'] || 0;
+        var tag_list = json_args['tag_list'] || query_args['tag_list'] || [];
+        var offset = json_args['offset'] || query_args['offset'] || 0;
         
         var query = {
             'offset': offset, 
-            'limit': 20
+            'limit': 5
         };
         
         var failure_f = function(err) {

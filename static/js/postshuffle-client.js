@@ -42,7 +42,7 @@ $(function(){
         },
         
         parse: function(resp, xhr) {
-            return resp.result;
+            return resp.result || resp;
         },
         
         initialize: function() { },
@@ -53,7 +53,11 @@ $(function(){
         
         model: Post,
         
-        url: '/post'
+        url: '/post',
+        
+        parse: function(resp, xhr) {
+            return resp.result.posts;
+        },
         
     });
     
@@ -111,10 +115,17 @@ $(function(){
         },
     
         events: {
-            'click .addPostButton': 'submitNewPost'
+            'click .addPostButton': 'submitNewPost',
+            'click .moreLink': 'loadMore',
         },
         
         render: function() {
+        },
+        
+        loadMore: function() {
+            window.Posts.fetch({
+                data: {offset: window.Posts.length},
+                add: true});
         },
         
         submitNewPost: function() {
