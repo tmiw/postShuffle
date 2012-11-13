@@ -140,7 +140,7 @@ $(function(){
             window.Posts.create({
                 title: $('#newPostForm #title').val(),
                 body: $('#newPostForm #body').val(),
-                tag: tags
+                tags: tags
             }, {wait: true});
         },
         

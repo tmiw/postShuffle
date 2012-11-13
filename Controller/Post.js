@@ -4,6 +4,7 @@
 var ControllerBase = require("../Utility/ControllerBase");
 var util           = require("util");
 var DataModel      = require("../DataModel");
+var Sequelize      = require('sequelize');
 
 module.exports = (function() {
     /**
@@ -55,6 +56,7 @@ module.exports = (function() {
      */
     Post.prototype.add_new_post = function(json_args, session_data, query_args) {
         var self = this;
+        var tags = json_args.tags || [];
         
         if (!json_args.title || !json_args.body)
         {
@@ -68,23 +70,35 @@ module.exports = (function() {
                     'title': json_args.title,
                     'body': json_args.body
                 }).success(function(post) {
-                    user.addPost(post).success(function() {
-                        // TODO: add tags
-                        self.emitSuccess({
-                            'tags': [],
-                            'title': post.title,
-                            'author': {
-                                'username': user.username,
-                                'title': user.title,
-                                'is_moderator': user.is_moderator,
-                                'is_admin': user.is_admin,
-                                'joined': user.createdAt
-                            },
-                            'body': post.body,
-                            'id': post.id,
-                            'create_date': post.createdAt.toUTCString(),
-                            'update_date': post.updatedAt.toUTCString(),
-                            'num_comments': 0
+                    DataModel.Tags.findAll({where: {'tag': tags}}).success(function(tagObjs) {
+                        var chainer = new Sequelize.Utils.QueryChainer;
+                        
+                        // Add the tags that exist.
+                        for (var i in tagObjs)
+                        {
+                            chainer.add(post.addTag(tagObjs[i]));
+                        }
+                        
+                        // TODO: ...and add the tags that don't.
+                        chainer.add(user.addPost(post));
+                        chainer.runSerially({ skipOnError: true });
+                        chainer.success(function() {
+                            self.emitSuccess({
+                                'tags': tags,
+                                'title': post.title,
+                                'author': {
+                                    'username': user.username,
+                                    'title': user.title,
+                                    'is_moderator': user.is_moderator,
+                                    'is_admin': user.is_admin,
+                                    'joined': user.createdAt
+                                },
+                                'body': post.body,
+                                'id': post.id,
+                                'create_date': post.createdAt.toUTCString(),
+                                'update_date': post.updatedAt.toUTCString(),
+                                'num_comments': 0
+                            });
                         });
                     });
                 });
