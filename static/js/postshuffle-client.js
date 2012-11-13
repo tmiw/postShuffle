@@ -129,9 +129,18 @@ $(function(){
         },
         
         submitNewPost: function() {
+            var tag_list_html = $("#newPostForm .postTags li");
+            var tags = [];
+            for (var i in tag_list_html)
+            {
+                tags.push(tag_list_html[i].innerText);
+            }
+            console.log(tag_list_html);
+            
             window.Posts.create({
                 title: $('#newPostForm #title').val(),
-                body: $('#newPostForm #body').val()
+                body: $('#newPostForm #body').val(),
+                tag: tags
             }, {wait: true});
         },
         
