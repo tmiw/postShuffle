@@ -81,8 +81,7 @@ module.exports = (function() {
                         
                         // TODO: ...and add the tags that don't.
                         chainer.add(user.addPost(post));
-                        chainer.runSerially({ skipOnError: true });
-                        chainer.success(function() {
+                        chainer.runSerially({ skipOnError: true }).success(function() {
                             self.emitSuccess({
                                 'tags': tags,
                                 'title': post.title,
