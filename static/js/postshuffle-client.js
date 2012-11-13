@@ -59,6 +59,13 @@ $(function(){
             return resp.result.posts;
         },
         
+        comparator: function(obj, obj2) {
+            var d1 = new Date(obj.get('create_date')).valueOf();
+            var d2 = new Date(obj2.get('create_date')).valueOf();
+            if (d1 == d2) return 0;
+            else if (d1 < d2) return 1;
+            else return -1;
+        }
     });
     
     window.Posts = new PostList();
@@ -140,6 +147,7 @@ $(function(){
             window.Posts.create({
                 title: $('#newPostForm #title').val(),
                 body: $('#newPostForm #body').val(),
+                create_date: new Date(), // needed to ensure correct ordering
                 tags: tags
             }, {wait: true});
         },
