@@ -3,6 +3,7 @@
 
 var ControllerBase = require("../Utility/ControllerBase");
 var Post           = require("./Post");
+var Tag            = require("./Tag");
 var util           = require("util");
 
 module.exports = (function() {
@@ -15,6 +16,7 @@ module.exports = (function() {
         Controller.super_.call(this, app);
 
         this.Post = new Post(app);
+        this.Tag = new Tag(app);
     };
     
     util.inherits(Controller, ControllerBase);
@@ -24,7 +26,8 @@ module.exports = (function() {
      */
     Controller.prototype.link_routes = function() { 
         this.Post.link_routes();
-            
+        this.Tag.link_routes();
+        
         // Map URL path for backbone/underscore to our node_modules folder
         // so that npm can track this for us.
         this.__app.get(

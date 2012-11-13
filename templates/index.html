@@ -18,7 +18,7 @@
             
             $( "#tagBox" ).autocomplete({
                 minLength: 0,
-                source: ["hello", "obama"],
+                source: "/tag",
                 select: function( event, ui ) {
                     $("#newPostForm .postTags").append("<li class='postTag'>" + ui.item.value + "</li> ");
                     return false;
