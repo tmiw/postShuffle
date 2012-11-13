@@ -1,6 +1,8 @@
 <html>
 <head>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     <script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script language="javascript" src="/static/js/underscore.js"></script>
     <script language="javascript" src="/static/js/backbone.js"></script>
     <script language="javascript" src="/static/js/postshuffle-client.js"></script>
@@ -13,6 +15,15 @@
         // Bootstrap models when the page finishes loading.
         $(function() {
             loadInitialPosts({{ &data }});
+            
+            $( "#tagBox" ).autocomplete({
+                minLength: 0,
+                source: ["hello", "obama"],
+                select: function( event, ui ) {
+                    $("#newPostForm .postTags").append("<li class='postTag'>" + ui.item.value + "</li> ");
+                    return false;
+                }
+            });
         });
     // -->
     </script>
@@ -30,6 +41,7 @@
         <form id="newPostForm">
             Title: <input type="text" id="title" size="50" value="" /><br/>
             Body: <textarea id="body" rows="5" cols="50"></textarea><br/>
+            Tags: <input type="text" id="tagBox" /><ul class="postTags"></ul><br />
             <input type="button" class="addPostButton" value="Add" />
         </form>
     </div>

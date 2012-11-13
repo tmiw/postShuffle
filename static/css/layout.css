@@ -31,14 +31,14 @@ li.post .postRight {
     text-align: right;
 }
 
-li.post .postTags {
+.postTags {
     padding: 0;
     margin-left: 0;
     display: inline;
     font-size: 10pt;
 }
 
-li.post .postTag {
+.postTag {
     display: inline;
     list-style-type: none;
     background-color: black;
