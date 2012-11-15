@@ -239,6 +239,7 @@ $(function(){
         addAll: function() {
             var self = this;
             
+            self.$el.empty();
             if (self.comments.length > 0)
             {
                 for (var i = 0; i < self.comments.length; i++)
