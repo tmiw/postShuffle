@@ -30,7 +30,7 @@ module.exports = (function() {
      * @param {Function} fxn The function to execute.
      */
     ControllerBase.prototype.success = function(fxn) {
-        this.on('success', fxn);
+        this.once('success', fxn);
         return this;
     };
     
@@ -39,7 +39,7 @@ module.exports = (function() {
      * @param {Function} fxn The function to execute.
      */
     ControllerBase.prototype.failure = function(fxn) {
-        this.on('failure', fxn);
+        this.once('failure', fxn);
         return this;
     };
     
