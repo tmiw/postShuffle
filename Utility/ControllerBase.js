@@ -62,7 +62,7 @@ module.exports = (function() {
             
             try
             {
-                fn.call(self, req.body, req.session, req.query).success(function(data) { 
+                fn.call(self, req.body, req.session, req.query, req.params).success(function(data) { 
                     res.send({
                         'status': 'ok',
                         'result': data

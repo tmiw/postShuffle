@@ -40,5 +40,6 @@ exports.Posts.hasMany(exports.Comments);
 exports.Posts.belongsTo(exports.Users);
 exports.Tags.hasMany(exports.Posts);
 exports.Comments.hasOne(exports.Comments, {'as': 'Parent'});
+exports.Comments.belongsTo(exports.Users);
 
 db.sync();

@@ -49,6 +49,32 @@ $(function(){
         
     });
     
+    var Comment = Backbone.Model.extend({
+        
+        defaults: function() {
+            return {
+                'author': {
+                    'username': '',
+                    'title': '',
+                    'is_moderator': false,
+                    'is_admin': false,
+                    'joined': new Date()
+                },
+                'body': '',
+                'id': '',
+                'create_date': new Date(),
+                'update_date': new Date()
+            };
+        },
+        
+        parse: function(resp, xhr) {
+            return resp.result || resp;
+        },
+        
+        initialize: function() { },
+        
+    });
+    
     var PostList = Backbone.Collection.extend({
         
         model: Post,
@@ -68,7 +94,52 @@ $(function(){
         }
     });
     
+    var CommentList = Backbone.Collection.extend({
+        
+        model: Comment,
+        
+        url: function() {
+            return "/comment/" + this.post_id;
+        },
+        
+        parse: function(resp, xhr) {
+            return resp.result.comments;
+        },
+        
+        comparator: function(obj, obj2) {
+            var d1 = new Date(obj.get('create_date')).valueOf();
+            var d2 = new Date(obj2.get('create_date')).valueOf();
+            if (d1 == d2) return 0;
+            else if (d1 < d2) return 1;
+            else return -1;
+        }
+    });
+    
     window.Posts = new PostList();
+    
+    var CommentView = Backbone.View.extend({
+        tagName: 'li',
+        
+        className: 'comment',
+        
+        events: { /* TBD */ },
+        
+        template: _.template($('#commentTemplate').html()),
+        
+        initialize: function() {
+          this.model.bind('change', this.render, this);
+          this.model.bind('destroy', this.remove, this);
+        },
+        
+        clear: function() {
+          this.model.clear();
+        },
+        
+        render: function() {
+          this.$el.html(this.template(this.model.toJSON()));
+          return this;
+        }
+    });
     
     var PostView = Backbone.View.extend({
         
@@ -97,6 +168,15 @@ $(function(){
         },
         
         expandBody: function() {
+            if (!this.commentView)
+            {
+                this.commentView = new CommentListView({
+                    el: this.$('.comments')
+                });
+                this.commentView.comments.post_id = this.model.id;
+            }
+            this.commentView.comments.fetch({wait: true});
+            
             this.$('.postBody').css('display', 'block');
             this.events['click .postTitle'] = 'hideBody';
             this.delegateEvents();
@@ -107,6 +187,76 @@ $(function(){
             this.events['click .postTitle'] = 'expandBody';
             this.delegateEvents();
         }
+    });
+    
+    var CommentListView = Backbone.View.extend({
+        
+        initialize: function() {            
+            this.comments = new CommentList;
+            this.comments.bind('add', this.addOne, this);
+            this.comments.bind('reset', this.addAll, this);
+            this.comments.bind('all', this.render, this);
+        },
+    
+        events: {
+            /*'click .addPostButton': 'submitNewPost',
+            'click .moreLink': 'loadMore',*/
+        },
+        
+        render: function() {
+            return this;
+        },
+        
+        /*loadMore: function() {
+            this.comments.fetch({
+                data: {offset: window.Posts.length},
+                add: true});
+        },
+        
+        submitNewPost: function() {
+            var tag_list_html = $("#newPostForm .postTags li");
+            var tags = [];
+            for (var i in tag_list_html)
+            {
+                tags.push(tag_list_html[i].innerText);
+            }
+            console.log(tag_list_html);
+            
+            window.Posts.create({
+                title: $('#newPostForm #title').val(),
+                body: $('#newPostForm #body').val(),
+                create_date: new Date(), // needed to ensure correct ordering
+                tags: tags
+            }, {wait: true});
+        },*/
+        
+        addOne: function(item) {
+            var self = this;
+            var view = new CommentView({model: item});
+            self.$el.append(view.render().el);
+        },
+        
+        addAll: function() {
+            var self = this;
+            
+            if (self.comments.length > 0)
+            {
+                for (var i = 0; i < self.comments.length; i++)
+                {
+                    self.addOne(self.comments.at(i));
+                }
+            }
+            else
+            {
+                //this.$("#postList").append(_.template($('#noPostTemplate').html()));
+            }
+        },
+        
+        clearCompleted: function() {
+          _.each(this.comments.done(), function(post){ post.clear(); });
+          return false;
+        }
+    
     });
     
     var PostListView = Backbone.View.extend({
@@ -127,6 +277,7 @@ $(function(){
         },
         
         render: function() {
+            return this;
         },
         
         loadMore: function() {
