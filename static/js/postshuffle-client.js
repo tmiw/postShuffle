@@ -293,7 +293,6 @@ $(function(){
             {
                 tags.push(tag_list_html[i].innerText);
             }
-            console.log(tag_list_html);
             
             window.Posts.create({
                 title: $('#newPostForm #title').val(),
