@@ -171,7 +171,7 @@ $(function(){
             if (!this.commentView)
             {
                 this.commentView = new CommentListView({
-                    el: this.$('.comments')
+                    el: this.$('.commentBlock')
                 });
                 this.commentView.comments.post_id = this.model.id;
             }
@@ -199,47 +199,38 @@ $(function(){
         },
     
         events: {
-            /*'click .addPostButton': 'submitNewPost',
-            'click .moreLink': 'loadMore',*/
+            'click .addCommentButton': 'submitNewComment',
+            /*'click .moreLink': 'loadMore',*/
         },
         
         render: function() {
             return this;
         },
         
-        /*loadMore: function() {
+        loadMore: function() {
             this.comments.fetch({
-                data: {offset: window.Posts.length},
+                data: {offset: this.comments.length},
                 add: true});
         },
         
-        submitNewPost: function() {
-            var tag_list_html = $("#newPostForm .postTags li");
-            var tags = [];
-            for (var i in tag_list_html)
-            {
-                tags.push(tag_list_html[i].innerText);
-            }
-            console.log(tag_list_html);
-            
-            window.Posts.create({
-                title: $('#newPostForm #title').val(),
-                body: $('#newPostForm #body').val(),
+        submitNewComment: function() {
+            var commentBodyField = this.$(".commentForm .commentBodyField");
+            this.comments.create({
+                body: commentBodyField.val(),
                 create_date: new Date(), // needed to ensure correct ordering
-                tags: tags
             }, {wait: true});
-        },*/
+        },
         
         addOne: function(item) {
             var self = this;
             var view = new CommentView({model: item});
-            self.$el.append(view.render().el);
+            self.$(".comments").append(view.render().el);
         },
         
         addAll: function() {
             var self = this;
             
-            self.$el.empty();
+            self.$(".comments").empty();
             if (self.comments.length > 0)
             {
                 for (var i = 0; i < self.comments.length; i++)

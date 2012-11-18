@@ -76,7 +76,14 @@
 </div>
 <div class="postBody">
     <div class="bodyText"><%- body %></div>
-    <ul class="comments"></ul>
+    <div class="commentBlock">
+        <ul class="comments"></ul>
+        <form class="commentForm">
+            New comment:<br/>
+            Body: <textarea class="commentBodyField" rows="5" cols="50"></textarea><br/>
+            <input type="button" class="addCommentButton" value="Add" />
+        </form>
+    </div>
 </div>
 </script>
 

@@ -4,7 +4,6 @@
 var ControllerBase = require("../Utility/ControllerBase");
 var util           = require("util");
 var DataModel      = require("../DataModel");
-var Sequelize      = require('sequelize');
 
 module.exports = (function() {
     /**
@@ -22,79 +21,88 @@ module.exports = (function() {
      * Links controller's routes to application.
      */
     Comment.prototype.link_routes = function() {        
-        //this.__app.put("/post", this.json(this.add_new_post));
+        this.__app.put("/comment/:cid", this.json(this.add_new_comment));
         this.__app.get("/comment/:cid", this.json(this.get_comments));
     };
     
     /**
-     * Adds a new post.
-     * @param {Object} json_args Arguments passed in by browser.
-     * @param {Object} session_data Current session data.
-     * @returns {Array} Data corresponding to the new post.
+     * Adds a new comment.
+     * @param {Object} json_args Dictionary of arguments (offset).
+     * @param {Object} session_data Session data.
+     * @param {Object} query_args Query string arguments.
+     * @param {Object} params List of URL parameters (/comment/[post_id]).
+     * @returns {Array} Data corresponding to the new comment.
      */
-    /*Post.prototype.add_new_post = function(json_args, session_data, query_args) {
+    Comment.prototype.add_new_comment = function(json_args, session_data, query_args, params) {
         var self = this;
-        var tags = json_args.tags || [];
+        var post_id = parseInt(params.cid);
         
-        if (!json_args.title || !json_args.body)
+        var error_f = function(err) {
+            self.emitFailure(err);
+        };
+        
+        if (!json_args.body || !post_id)
         {
-            this.emitFailure("Must provide a title and body.");
+            error_f("Must provide a body and post ID.");
         }
         else 
         {
             // TODO: find valid user.
-            DataModel.Users.find(1).success(function(user) {
-                DataModel.Posts.create({
-                    'title': json_args.title,
-                    'body': json_args.body
-                }).success(function(post) {
-                    DataModel.Tags.findAll({where: {'tag': tags}}).success(function(tagObjs) {
-                        var chainer = new Sequelize.Utils.QueryChainer;
-                        
-                        // Add the tags that exist.
-                        for (var i in tagObjs)
+            DataModel.Posts.find(post_id).success(function(post) {
+                if (!post) 
+                {
+                    error_f("Could not find post " + post_id);
+                }
+                else
+                {
+                    DataModel.Users.find(1).success(function(user) {
+                        if (!user) 
                         {
-                            chainer.add(post.addTag(tagObjs[i]));
+                            error_f("Invaid user.");
                         }
-                        
-                        // TODO: ...and add the tags that don't.
-                        chainer.add(user.addPost(post));
-                        chainer.runSerially({ skipOnError: true }).success(function() {
-                            self.emitSuccess({
-                                'tags': tags,
-                                'title': post.title,
-                                'author': {
-                                    'username': user.username,
-                                    'title': user.title,
-                                    'is_moderator': user.is_moderator,
-                                    'is_admin': user.is_admin,
-                                    'joined': user.createdAt
-                                },
-                                'body': post.body,
-                                'id': post.id,
-                                'create_date': post.createdAt.toUTCString(),
-                                'update_date': post.updatedAt.toUTCString(),
-                                'num_comments': 0
-                            });
-                        });
-                    });
-                });
-            });
+                        else
+                        {
+                            DataModel.Comments.create({
+                                'body': json_args.body
+                            }).success(function(comment) {
+                                post.addComment(comment).success(function() {
+                                    user.addComment(comment).success(function() {
+                                        self.emitSuccess({
+                                            'author': {
+                                                'username': user.username,
+                                                'title': user.title,
+                                                'is_moderator': user.is_moderator,
+                                                'is_admin': user.is_admin,
+                                                'joined': user.createdAt
+                                            },
+                                            'body': comment.body,
+                                            'id': comment.id,
+                                            'create_date': comment.createdAt.toUTCString(),
+                                            'update_date': comment.updatedAt.toUTCString()
+                                        });
+                                    }).error(error_f);
+                                }).error(error_f);
+                            }).error(error_f);
+                        }
+                    }).error(error_f);
+                }
+            }).error(error_f);
         }
         
         return this;
-    };*/
+    };
     
     /**
      * Retrieves comments, given an offset.
      * @param {Object} json_args Dictionary of arguments (offset).
      * @param {Object} session_data Session data.
+     * @param {Object} query_args Query string arguments.
      * @param {Object} params List of URL parameters (/comment/[post_id]).
      * @return {Array} The list of posts.
      */
     Comment.prototype.get_comments = function(json_args, session_data, query_args, params) {
         var self = this;
-        var offset = json_args['offset'] || query_args['offset'] || 0;
+        var offset = json_args.offset || query_args.offset || 0;
         var post_id = params.cid;
         
         var query = {
