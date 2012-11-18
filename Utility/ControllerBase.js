@@ -71,7 +71,8 @@ module.exports = (function() {
             } 
             catch (err) 
             {
-                fail_f(err);
+                console.log(err);
+                fail_f("Internal error.");
             }
         };
     };
