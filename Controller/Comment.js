@@ -35,7 +35,7 @@ module.exports = (function() {
      */
     Comment.prototype.add_new_comment = function(json_args, session_data, query_args, params) {
         var self = this;
-        var post_id = parseInt(params.cid);
+        var post_id = parseInt(params.cid, 10);
         
         var error_f = function(err) {
             self.emitFailure(err);

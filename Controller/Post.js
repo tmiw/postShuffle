@@ -22,6 +22,8 @@ module.exports = (function() {
      * Links controller's routes to application.
      */
     Post.prototype.link_routes = function() {
+        var self = this;
+        
         this.__app.get(
             /^\/$/, 
             this.html(
@@ -71,7 +73,7 @@ module.exports = (function() {
                     'body': json_args.body
                 }).success(function(post) {
                     DataModel.Tags.findAll({where: {'tag': tags}}).success(function(tagObjs) {
-                        var chainer = new Sequelize.Utils.QueryChainer;
+                        var chainer = new Sequelize.Utils.QueryChainer();
                         
                         // Add the tags that exist.
                         for (var i in tagObjs)
@@ -115,8 +117,8 @@ module.exports = (function() {
      */
     Post.prototype.get_posts = function(json_args, session_data, query_args) {
         var self = this;
-        var tag_list = json_args['tag_list'] || query_args['tag_list'] || [];
-        var offset = json_args['offset'] || query_args['offset'] || 0;
+        var tag_list = json_args.tag_list || query_args.tag_list || [];
+        var offset = json_args.offset || query_args.offset || 0;
         
         var query = {
             'offset': offset, 
