@@ -38,6 +38,8 @@
 <body>
 
 <div id="app">
+    <div id="topbar">
+    </div>
     <h1>title here</h1>
     <img src="/static/img/ajax-loader.gif" id="spinner" />
     <ul id="postList">
@@ -97,5 +99,14 @@
 <div class="postTitle">No posts found.</div>
 </script>
 
+<script type="text/template" id="loginBarTemplate">
+<div class="loginBox">
+<form>
+Username: <input type="text" class="usernameField" />
+Password: <input type="password" class="passwordField" />
+<input type="button" class="loginButton" value="Login" />
+</form>
+</div>
+</script>
 </body>
 </html>

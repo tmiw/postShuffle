@@ -251,16 +251,41 @@ $(function(){
     
     });
     
+    var UnauthenticatedTopView = Backbone.View.extend({
+        el: $("#topbar"),
+        
+        template: _.template($('#loginBarTemplate').html()),
+        
+        initialize: function() {
+            this.render();
+        },
+        
+        events: {
+            'click .loginButton': 'submitLoginRequest'
+        },
+        
+        render: function() {
+          this.$el.html(this.template());
+          return this;
+        },
+        
+        submitLoginRequest: function() {
+            // TODO
+        }
+    });
+    
     var PostListView = Backbone.View.extend({
         
         el: $("#app"),
         
         initialize: function() {
     
-          window.Posts.bind('add', this.addOne, this);
-          window.Posts.bind('reset', this.addAll, this);
-          window.Posts.bind('all', this.render, this);
+            window.Posts.bind('add', this.addOne, this);
+            window.Posts.bind('reset', this.addAll, this);
+            window.Posts.bind('all', this.render, this);
     
+            // Default to unauthenticated view unless bootstrapped otherwise.
+            this.topView = new UnauthenticatedTopView();
         },
     
         events: {
@@ -317,6 +342,5 @@ $(function(){
     
     });
 
-    var app = new PostListView;
-
+    window.app = new PostListView();
 });
