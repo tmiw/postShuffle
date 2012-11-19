@@ -56,14 +56,14 @@ module.exports = (function() {
             else
             {
                 var user = users[0];
-                //session_data.user = user;
-                self.emitSuccess({
+                session_data.user = {
                                     'username': user.username,
                                     'title': user.title,
                                     'is_moderator': user.is_moderator,
                                     'is_admin': user.is_admin,
                                     'joined': user.createdAt
-                                });
+                                };
+                self.emitSuccess(session_data.user);
             }
         }).error(error_f);
         
