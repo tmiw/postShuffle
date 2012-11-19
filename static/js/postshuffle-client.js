@@ -290,8 +290,8 @@ $(function(){
             }).success(function(data, textStatus, xhr) {
                 if (data.status == "ok")
                 {
-                    // login successful
-                    alert("XXX");
+                    // login successful, reload page.
+                    window.location.reload();
                 }
                 else
                 {
