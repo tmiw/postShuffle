@@ -1,21 +1,6 @@
 // postShuffle -- web forum software for node.js
 // Copyright (c) 2012 Mooneer Salem
 
-function loadInitialPosts(jsonData)
-{
-    window.Posts.reset(jsonData.posts);
-}
-
-function loadUserData(jsonData)
-{
-    if (jsonData)
-    {
-        window.app.topView.remove();
-        
-        // TODO: authenticated view
-    }
-}
-
 // Set up AJAX spinner.
 $.ajaxSetup({
     beforeSend:function(){
@@ -303,6 +288,44 @@ $(function(){
         }
     });
     
+    var AuthenticatedTopView = Backbone.View.extend({
+        el: $("#topbar"),
+        
+        template: _.template($('#userBarTemplate').html()),
+        
+        initialize: function() {
+            this.render();
+        },
+        
+        events: {
+            'click .logoutLink': 'submitLogoutRequest'
+        },
+        
+        render: function() {
+          this.$el.html(this.template(window.app.user));
+          return this;
+        },
+        
+        submitLogoutRequest: function() {
+            $.ajax('/user/logout', {
+                type: "GET",
+                cache: false
+            }).success(function(data, textStatus, xhr) {
+                if (data.status == "ok")
+                {
+                    // logout successful, reload page.
+                    window.location.reload();
+                }
+                else
+                {
+                    alert(data.error);
+                }
+            }).error(function(xhr, textStatus, errorThrown) {
+                alert(textStatus);
+            });
+        }
+    });
+    
     var PostListView = Backbone.View.extend({
         
         el: $("#app"),
@@ -369,7 +392,25 @@ $(function(){
           return false;
         },
     
+        loadAuthenticatedView: function() {
+            this.topView.$el.empty();
+            this.topView = new AuthenticatedTopView();
+        }
     });
 
     window.app = new PostListView();
 });
+
+function loadInitialPosts(jsonData)
+{
+    window.Posts.reset(jsonData.posts);
+}
+
+function loadUserData(jsonData)
+{
+    if (jsonData)
+    {
+        window.app.user = jsonData;
+        window.app.loadAuthenticatedView();
+    }
+}
