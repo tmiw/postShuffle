@@ -14,9 +14,7 @@ var config = new AppConfig();
 app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.cookieParser(config.sessionSecret));
-app.use(express.cookieSession({
-    secret: config.sessionSecret
-}));
+app.use(express.session());
 app.use('/static', express.directory(__dirname + '/static'));
 app.use('/static', express.static(__dirname + '/static'));
 
