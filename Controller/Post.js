@@ -59,10 +59,13 @@ module.exports = (function() {
     Post.prototype.add_new_post = function(json_args, session_data, query_args) {
         var self = this;
         var tags = json_args.tags || [];
+        var error_f = function(err) {
+            self.emitFailure(err);
+        };
         
         if (!json_args.title || !json_args.body)
         {
-            this.emitFailure("Must provide a title and body.");
+            error_f("Must provide a title and body.");
         }
         else 
         {
@@ -101,7 +104,7 @@ module.exports = (function() {
                                     'update_date': post.updatedAt.toUTCString(),
                                     'num_comments': 0
                                 });
-                            });
+                            }).error(error_f);
                         };
                         
                         var tag_f = function(idx, tag)
@@ -118,8 +121,8 @@ module.exports = (function() {
                                     {
                                         tag_exist_f();
                                     }
-                                });
-                            });
+                                }).error(error_f);
+                            }).error(error_f);
                         };
                         
                         // Find and add the tags that don't already exist.
