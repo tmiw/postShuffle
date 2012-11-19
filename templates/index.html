@@ -16,7 +16,14 @@
         $(function() {
             loadInitialPosts({{ &data }});
             
-            $( "#tagBox" ).autocomplete({
+            $( "#tagBox" ).bind( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.ENTER &&
+                        !$( this ).data( "autocomplete" ).menu.active ) {
+                    event.preventDefault();
+                    var val = $( this ).val();
+                    $("#newPostForm .postTags").append("<li class='postTag'>" + val + "</li> ");
+                }
+            }).autocomplete({
                 minLength: 0,
                 source: "/tag",
                 select: function( event, ui ) {

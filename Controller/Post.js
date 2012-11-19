@@ -73,34 +73,84 @@ module.exports = (function() {
                     'body': json_args.body
                 }).success(function(post) {
                     DataModel.Tags.findAll({where: {'tag': tags}}).success(function(tagObjs) {
-                        var chainer = new Sequelize.Utils.QueryChainer();
+                        var non_exist_list = [];
                         
-                        // Add the tags that exist.
-                        for (var i in tagObjs)
+                        var tag_exist_f = function() {
+                            // Add the tags that exist.
+                            var chainer = new Sequelize.Utils.QueryChainer();
+                            for (var i in tagObjs)
+                            {
+                                chainer.add(post.addTag(tagObjs[i]));
+                            }
+                            
+                            chainer.add(user.addPost(post));
+                            chainer.runSerially({ skipOnError: true }).success(function() {
+                                self.emitSuccess({
+                                    'tags': tags,
+                                    'title': post.title,
+                                    'author': {
+                                        'username': user.username,
+                                        'title': user.title,
+                                        'is_moderator': user.is_moderator,
+                                        'is_admin': user.is_admin,
+                                        'joined': user.createdAt
+                                    },
+                                    'body': post.body,
+                                    'id': post.id,
+                                    'create_date': post.createdAt.toUTCString(),
+                                    'update_date': post.updatedAt.toUTCString(),
+                                    'num_comments': 0
+                                });
+                            });
+                        };
+                        
+                        var tag_f = function(idx, tag)
                         {
-                            chainer.add(post.addTag(tagObjs[i]));
+                            DataModel.Tags.create({
+                                tag: tag
+                            }).success(function(t) {
+                                post.addTag(t).success(function() {
+                                    if (idx + 1 < non_exist_list.length)
+                                    {
+                                        tag_f(idx + 1, non_exist_list[idx + 1]);
+                                    }
+                                    else
+                                    {
+                                        tag_exist_f();
+                                    }
+                                });
+                            });
+                        };
+                        
+                        // Find and add the tags that don't already exist.
+                        for (var k in tags)
+                        {
+                            if (!tags[k]) continue;
+                            
+                            var containsItem = false;
+                            for (var j in tagObjs)
+                            {
+                                if (j.tag == tags[k])
+                                {
+                                    containsItem = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!containsItem)
+                            {                                    
+                                non_exist_list.push(tags[k]);
+                            }
                         }
                         
-                        // TODO: ...and add the tags that don't.
-                        chainer.add(user.addPost(post));
-                        chainer.runSerially({ skipOnError: true }).success(function() {
-                            self.emitSuccess({
-                                'tags': tags,
-                                'title': post.title,
-                                'author': {
-                                    'username': user.username,
-                                    'title': user.title,
-                                    'is_moderator': user.is_moderator,
-                                    'is_admin': user.is_admin,
-                                    'joined': user.createdAt
-                                },
-                                'body': post.body,
-                                'id': post.id,
-                                'create_date': post.createdAt.toUTCString(),
-                                'update_date': post.updatedAt.toUTCString(),
-                                'num_comments': 0
-                            });
-                        });
+                        if (non_exist_list.length > 0)
+                        {
+                            tag_f(0, non_exist_list[0]);
+                        }
+                        else
+                        {
+                            tag_exist_f();
+                        }
                     });
                 });
             });
