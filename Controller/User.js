@@ -41,40 +41,33 @@ module.exports = (function() {
         
         var username = query_args.username;
         var password = query_args.password;
+
+        // TODO: SHA1/MD5 hashing of password
+        DataModel.Users.findAll({
+            where: {
+                username: username,
+                password: password
+            }
+        }).success(function(users) {
+            if (!users || users.length === 0) 
+            {
+                error_f("Invalid username or password.");
+            }
+            else
+            {
+                var user = users[0];
+                //session_data.user = user;
+                self.emitSuccess({
+                                    'username': user.username,
+                                    'title': user.title,
+                                    'is_moderator': user.is_moderator,
+                                    'is_admin': user.is_admin,
+                                    'joined': user.createdAt
+                                });
+            }
+        }).error(error_f);
         
-        if (!username || !password)
-        {
-            error_f("Must provide a username and password.");
-        }
-        else 
-        {
-            // TODO: SHA1/MD5 hashing of password
-            DataModel.Users.findAll({
-                where: {
-                    username: username,
-                    password: password
-                }
-            }).success(function(users) {
-                if (!users || users.length === 0) 
-                {
-                    error_f("Invalid username or password.");
-                }
-                else
-                {
-                    var user = users[0];
-                    //session_data.user = user;
-                    self.emitSuccess({
-                                        'username': user.username,
-                                        'title': user.title,
-                                        'is_moderator': user.is_moderator,
-                                        'is_admin': user.is_admin,
-                                        'joined': user.createdAt
-                                    });
-                }
-            }).error(error_f);
-        }
-        
-        return this;
+        return self;
     };
     
     return User;
