@@ -270,7 +270,26 @@ $(function(){
         },
         
         submitLoginRequest: function() {
-            // TODO
+            $.ajax('/user/login', {
+                type: "GET",
+                data: {
+                    username: this.$(".usernameField").val(),
+                    password: this.$(".passwordField").val()
+                },
+                cache: false
+            }).success(function(data, textStatus, xhr) {
+                if (data.status == "ok")
+                {
+                    // login successful
+                    alert("XXX");
+                }
+                else
+                {
+                    alert(data.error);
+                }
+            }).error(function(xhr, textStatus, errorThrown) {
+                alert(textStatus);
+            });
         }
     });
     
