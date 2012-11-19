@@ -89,6 +89,7 @@ module.exports = (function() {
             fn.call(self, {}, req.session, req.query).success(function(data) { 
                 res.render(template, {
                     'title': title,
+                    'user_data': JSON.stringify(req.session.user),
                     'data': JSON.stringify(data)
                 });
             });

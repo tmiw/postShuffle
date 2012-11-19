@@ -14,6 +14,7 @@
     <!--
         // Bootstrap models when the page finishes loading.
         $(function() {
+            loadUserData({{ &user_data }});
             loadInitialPosts({{ &data }});
             
             $( "#tagBox" ).bind( "keydown", function( event ) {

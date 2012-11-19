@@ -6,6 +6,16 @@ function loadInitialPosts(jsonData)
     window.Posts.reset(jsonData.posts);
 }
 
+function loadUserData(jsonData)
+{
+    if (jsonData)
+    {
+        window.app.topView.remove();
+        
+        // TODO: authenticated view
+    }
+}
+
 // Set up AJAX spinner.
 $.ajaxSetup({
     beforeSend:function(){
