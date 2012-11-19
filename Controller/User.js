@@ -22,6 +22,19 @@ module.exports = (function() {
      */
     User.prototype.link_routes = function() {        
         this.__app.get("/user/login", this.json(this.login));
+        this.__app.get("/user/logout", this.logout);
+    };
+    
+    /**
+     * Logs user out of system.
+     * @param {Object} req Request object.
+     * @param {Object} res Response object.
+     */
+    User.prototype.logout = function(req, res) {
+        // We're not using .json() here due to the success handler
+        // not being attached soon enough.
+        req.session.user = null;
+        res.send({ 'status': 'ok' });
     };
     
     /**
