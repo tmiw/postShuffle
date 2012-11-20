@@ -195,7 +195,7 @@ $(function(){
     
         events: {
             'click .addCommentButton': 'submitNewComment',
-            /*'click .moreLink': 'loadMore',*/
+            'click .moreLink': 'loadMore',
         },
         
         render: function() {
