@@ -199,6 +199,10 @@ $(function(){
         },
         
         render: function() {
+            if (!window.app.user)
+            {
+                this.$(".commentForm").css("display", "none");
+            }
             return this;
         },
         
@@ -346,6 +350,10 @@ $(function(){
         },
         
         render: function() {
+            if (!window.app.user)
+            {
+                this.$("#newPostForm").css("display", "none");
+            }
             return this;
         },
         
