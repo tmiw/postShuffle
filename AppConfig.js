@@ -32,6 +32,11 @@ var settings = function() {
     // anywhere in the project. See Nodemailer documentation for setup
     // instructions.
     this.mailer = nodemailer.createTransport("sendmail");
+    
+    this.mail_from = "postShuffle <mooneer@gmail.com>";
+    this.mail_subjects = {
+        register_confirm: 'Confirm your registration'
+    };
 };
 
 module.exports = new settings();

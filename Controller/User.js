@@ -5,6 +5,7 @@ var ControllerBase = require("../Utility/ControllerBase");
 var util           = require("util");
 var DataModel      = require("../DataModel");
 var AppConfig      = require('../AppConfig.js');
+var consolidate    = require('consolidate');
 
 module.exports = (function() {
     /**
@@ -23,7 +24,7 @@ module.exports = (function() {
      */
     User.prototype.link_routes = function() {        
         this.__app.get("/user/login", this.json(this.login));
-        this.__app.post("/user/register", this.json(this.register));
+        this.__app.get("/user/register", this.json(this.register));
         this.__app.get("/user/logout", this.logout);
     };
     
@@ -50,13 +51,17 @@ module.exports = (function() {
     User.prototype.register = function(json_args, session_data, query_args, params) {
         var self = this;
         
+        var username = json_args.username || query_args.username;
+        var password = json_args.password || query_args.password;
+        var email = json_args.email || query_args.email;
+        
         if (session_data.user)
         {
             self.emitFailure("Cannot be logged in.");
         }
         else
         {
-            if (!json_args.username || !json_args.password || !json_args.email)
+            if (!username || !password || !email)
             {
                 self.emitFailure("Must provide username/password/email.");
             }
@@ -67,7 +72,7 @@ module.exports = (function() {
                 // Verify that username does not already exist.
                 DataModel.Users.findAll({
                     where: {
-                        username: json_args.username
+                        username: username
                     }
                 }).success(function(u_list) {
                     if (u_list && u_list.length > 0)
@@ -83,16 +88,54 @@ module.exports = (function() {
                         });
                         
                         DataModel.Users.create({
-                            username: json_args.username,
-                            password: json_args.password,
+                            username: username,
+                            password: password,
                             is_moderator: false,
                             is_admin: false,
                             title: AppConfig.defaultTitle,
                             confirmation_code: uuid,
-                            email: json_args.email
+                            email: email
                         }).success(function(u) {
                             // TODO: send confirmation email.
-                            self.emitSuccess({});
+                            consolidate.mustache(
+                                __dirname + "/../templates/email/register_confirm.html",
+                                {
+                                    username: username,
+                                    confirm_code: uuid
+                                },
+                                function(err, html)
+                                {
+                                    if (err)
+                                    {
+                                        u.destroy().success(function() {
+                                            self.emitFailure(err);
+                                        }).error(function(err) {
+                                            self.emitFailure(err);
+                                        });
+                                    }
+                                    else
+                                    {
+                                        AppConfig.mailer.sendMail({
+                                            from: AppConfig.mail_from,
+                                            to: email,
+                                            subject: AppConfig.mail_subjects.register_confirm,
+                                            html: html
+                                        }, function(err, res) {
+                                            if (err)
+                                            {
+                                                u.destroy().success(function() {
+                                                    self.emitFailure(err);
+                                                }).error(function(err) {
+                                                    self.emitFailure(err);
+                                                });
+                                            }
+                                            else
+                                            {
+                                                self.emitSuccess({});
+                                            }
+                                        });
+                                    }
+                                });
                         }).error(function(err) {
                             self.emitFailure(err);
                         });
