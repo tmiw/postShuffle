@@ -24,8 +24,46 @@ module.exports = (function() {
      */
     User.prototype.link_routes = function() {        
         this.__app.get("/user/login", this.json(this.login));
-        this.__app.get("/user/register", this.json(this.register));
+        this.__app.post("/user/register", this.json(this.register));
         this.__app.get("/user/logout", this.logout);
+        this.__app.get(/^\/user\/confirm\/([A-Fa-f0-9\-]+)$/, this.confirm_register);
+    };
+    
+    /**
+     * Confirms user registration.
+     * @param {Object} req Request object.
+     * @param {Object} res Response object.
+     */
+    User.prototype.confirm_register = function(req, res) {
+        var uuid = req.params[0];
+        var fail_f = function(err) {
+            res.send(500);
+        };
+        
+        DataModel.Users.findAll({
+            where: {
+                confirmation_code: uuid
+            }}).success(function(u_list) {
+                if (!u_list || u_list.length !== 1)
+                {
+                    res.send(404);
+                }
+                else
+                {
+                    var user = u_list[0];
+                    user.confirmation_code = '';
+                    user.save().success(function() {
+                        req.session.user = {
+                            'username': user.username,
+                            'title': user.title,
+                            'is_moderator': user.is_moderator,
+                            'is_admin': user.is_admin,
+                            'joined': user.createdAt
+                        };
+                        res.redirect("/");
+                    }).error(fail_f);
+                }
+            }).error(fail_f);
     };
     
     /**
