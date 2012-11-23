@@ -62,23 +62,41 @@ module.exports = (function() {
             }
             else
             {
-                // Generate unique confirmation code.
-                var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                    return v.toString(16);
-                });
+                // TODO: ensure username/password have valid characters.
                 
-                DataModel.Users.create({
-                    username: json_args.username,
-                    password: json_args.password,
-                    is_moderator: false,
-                    is_admin: false,
-                    title: AppConfig.defaultTitle,
-                    confirmation_code: uuid,
-                    email: json_args.email
-                }).success(function(u) {
-                    // TODO: send confirmation email.
-                    self.emitSuccess({});
+                // Verify that username does not already exist.
+                DataModel.Users.findAll({
+                    where: {
+                        username: json_args.username
+                    }
+                }).success(function(u_list) {
+                    if (u_list && u_list.length > 0)
+                    {
+                        self.emitFailure("Username already exists.");
+                    }
+                    else
+                    {
+                        // Generate unique confirmation code.
+                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                            return v.toString(16);
+                        });
+                        
+                        DataModel.Users.create({
+                            username: json_args.username,
+                            password: json_args.password,
+                            is_moderator: false,
+                            is_admin: false,
+                            title: AppConfig.defaultTitle,
+                            confirmation_code: uuid,
+                            email: json_args.email
+                        }).success(function(u) {
+                            // TODO: send confirmation email.
+                            self.emitSuccess({});
+                        }).error(function(err) {
+                            self.emitFailure(err);
+                        });
+                    }
                 }).error(function(err) {
                     self.emitFailure(err);
                 });
