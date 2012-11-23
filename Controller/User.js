@@ -157,7 +157,8 @@ module.exports = (function() {
                                             from: AppConfig.mail_from,
                                             to: email,
                                             subject: AppConfig.mail_subjects.register_confirm,
-                                            html: html
+                                            html: html,
+                                            generateTextFromHTML: true
                                         }, function(err, res) {
                                             if (err)
                                             {
