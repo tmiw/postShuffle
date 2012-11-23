@@ -54,21 +54,25 @@ module.exports = (function() {
             // TBD: should wrap returned data and/or perform preprocessing
             // of input JSON.
             var fail_f = function(err) {
+                self.removeListener('success', success_f);
                 res.send(500, {
                     'status': 'fail',
                     'error': err
                 });
             };
             
+            var success_f = function(data) { 
+                self.removeListener('failure', fail_f);
+                res.send({
+                    'status': 'ok',
+                    'result': data
+                }); 
+            };
+                
             try
             {
                 self.failure(fail_f);
-                fn.call(self, req.body, req.session, req.query, req.params).success(function(data) { 
-                    res.send({
-                        'status': 'ok',
-                        'result': data
-                    }); 
-                });
+                fn.call(self, req.body, req.session, req.query, req.params).success(success_f);
             } 
             catch (err) 
             {
@@ -110,7 +114,7 @@ module.exports = (function() {
      * @param {Object} data The data to pass to the event handler.
      */
     ControllerBase.prototype.emitFailure = function(data) {
-        this.emit('failure', data);    
+        this.emit('failure', data);
     };
     
     return ControllerBase;
