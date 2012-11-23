@@ -16,7 +16,9 @@ exports.Users = db.define('User', {
     'password': Sequelize.STRING,
     'is_moderator': Sequelize.BOOLEAN,
     'is_admin': Sequelize.BOOLEAN,
-    'title': Sequelize.STRING
+    'title': Sequelize.STRING,
+    'confirmation_code': Sequelize.STRING,
+    'email': Sequelize.STRING
 });
 
 exports.Posts = db.define('Post', {

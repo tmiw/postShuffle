@@ -24,6 +24,7 @@ var settings = function() {
     }
     
     this.sessionSecret = "cookie monster";
+    this.defaultTitle = "User";
 };
 
 module.exports = settings;
