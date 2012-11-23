@@ -62,16 +62,17 @@ module.exports = (function() {
             
             try
             {
+                self.failure(fail_f);
                 fn.call(self, req.body, req.session, req.query, req.params).success(function(data) { 
                     res.send({
                         'status': 'ok',
                         'result': data
                     }); 
-                }).failure(fail_f);
+                });
             } 
             catch (err) 
             {
-                fail_f("Internal error.");
+                self.emitFailure("Internal error.");
             }
         };
     };
