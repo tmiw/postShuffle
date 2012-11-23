@@ -4,10 +4,9 @@
 var AppConfig = require('./AppConfig');
 var Sequelize = require('sequelize');
 
-var config = new AppConfig();
-var db = new Sequelize(config.Database.name, config.Database.username, config.Database.password, {
-    'dialect': config.Database.type,
-    'storage': config.Database.name + ".db"
+var db = new Sequelize(AppConfig.Database.name, AppConfig.Database.username, AppConfig.Database.password, {
+    'dialect': AppConfig.Database.type,
+    'storage': AppConfig.Database.name + ".db"
 });
 
 // Tables.

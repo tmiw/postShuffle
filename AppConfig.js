@@ -27,4 +27,4 @@ var settings = function() {
     this.defaultTitle = "User";
 };
 
-module.exports = settings;
+module.exports = new settings();

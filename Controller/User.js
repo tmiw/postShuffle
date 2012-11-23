@@ -68,14 +68,12 @@ module.exports = (function() {
                     return v.toString(16);
                 });
                 
-                var config = new AppConfig();
-                
                 DataModel.Users.create({
                     username: json_args.username,
                     password: json_args.password,
                     is_moderator: false,
                     is_admin: false,
-                    title: config.defaultTitle,
+                    title: AppConfig.defaultTitle,
                     confirmation_code: uuid,
                     email: json_args.email
                 }).success(function(u) {

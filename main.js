@@ -7,13 +7,10 @@ var Controller = require(__dirname + '/Controller');
 var AppConfig = require('./AppConfig.js');
 var consolidate = require('consolidate');
 
-// Load config
-var config = new AppConfig();
-
 // Initialize Express middleware.
 app.use(express.compress());
 app.use(express.bodyParser());
-app.use(express.cookieParser(config.sessionSecret));
+app.use(express.cookieParser(AppConfig.sessionSecret));
 app.use(express.session());
 app.use('/static', express.directory(__dirname + '/static'));
 app.use('/static', express.static(__dirname + '/static'));
