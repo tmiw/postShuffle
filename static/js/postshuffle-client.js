@@ -295,7 +295,7 @@ $(function(){
             }
             else if (confirmEmail != email || confirmPassword != password)
             {
-                alert("Email and passwords must match.")
+                alert("Email and passwords must match.");
             }
             else
             {
