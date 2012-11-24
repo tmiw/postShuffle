@@ -45,6 +45,10 @@ li.post .postRight {
     color: white;
 }
 
+.registerDialog {
+    display: none;
+}
+
 li.post .postTag a {
     color: white;
     text-decoration: none;

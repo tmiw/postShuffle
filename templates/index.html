@@ -112,8 +112,18 @@ welcome <%- username %>, <%- title %>. <a href="#" class="logoutLink">logout</a>
 <form>
 Username: <input type="text" class="usernameField" />
 Password: <input type="password" class="passwordField" />
-<input type="button" class="loginButton" value="Login" />
+<input type="button" class="loginButton" value="Login" /> | <a href="#" class="registerLink">register</a>
 </form>
+</div>
+<div class="registerDialog">
+    <form id="registerForm">
+        Username: <input type="text" class="registerUsernameField" /><br />
+        Password: <input type="password" class="registerPasswordField" /><br />
+        Confirm password: <input type="password" class="registerConfirmPasswordField" /><br />
+        Email: <input type="text" class="registerEmailField" /><br />
+        Confirm email: <input type="text" class="registerConfirmEmailField" /><br />
+        <input type="button" class="registerButton" value="register" /> <input type="reset" value="reset" />
+    </form>
 </div>
 </script>
 </body>

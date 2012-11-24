@@ -260,12 +260,66 @@ $(function(){
         },
         
         events: {
-            'click .loginButton': 'submitLoginRequest'
+            'click .loginButton': 'submitLoginRequest',
+            'click .registerLink': 'toggleRegisterBox',
+            'click .registerButton': 'submitRegistrationRequest'
         },
         
         render: function() {
           this.$el.html(this.template());
           return this;
+        },
+        
+        toggleRegisterBox: function() {
+            if (this.$('.registerDialog').css("display") != "block")
+            {
+                this.$('.registerDialog').css("display", "block");
+            }
+            else
+            {
+                this.$('.registerDialog').css("display", "none");
+            }
+        },
+        
+        submitRegistrationRequest: function() {
+            var username = this.$(".registerUsernameField").val();
+            var password = this.$(".registerPasswordField").val();
+            var email = this.$(".registerEmailField").val();
+            var confirmPassword = this.$(".registerConfirmPasswordField").val();
+            var confirmEmail = this.$(".registerConfirmEmailField").val();
+            
+            if (!username || !password || !email || !confirmPassword ||
+                !confirmEmail)
+            {
+                alert("Must fill in all fields");
+            }
+            else if (confirmEmail != email || confirmPassword != password)
+            {
+                alert("Email and passwords must match.")
+            }
+            else
+            {
+                $.ajax('/user/register', {
+                    type: "POST",
+                    data: {
+                        username: username,
+                        password: password,
+                        email: email
+                    },
+                    cache: false
+                }).success(function(data, textStatus, xhr) {
+                    if (data.status == "ok")
+                    {
+                        // register successful
+                    }
+                    else
+                    {
+                        alert(data.error);
+                    }
+                }).error(function(xhr, textStatus, errorThrown) {
+                    alert(textStatus);
+                });
+            }
         },
         
         submitLoginRequest: function() {
