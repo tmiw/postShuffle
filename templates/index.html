@@ -32,6 +32,31 @@
                     return false;
                 }
             });
+            
+            $( "#registrationMissingFieldsError" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
+            $( "#registrationMatchingFieldsError" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
+            $( "#registrationSuccessfulMessage" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
+            $( "#errorDialog" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
+            $( "#communicationErrorDialog" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
         });
     // -->
     </script>
@@ -54,6 +79,26 @@
             <input type="button" class="addPostButton" value="Add" />
         </form>
     </div>
+</div>
+
+<div id="registrationMissingFieldsError" title="Missing Fields">
+    Must fill in all fields.
+</div>
+
+<div id="registrationMatchingFieldsError" title="Fields Must Match">
+    Emails and passwords must match.
+</div>
+
+<div id="registrationSuccessfulMessage" title="Registration Successful">
+    Check your email for further instructions.
+</div>
+
+<div id="errorDialog" title="Error">
+    Error message here.
+</div>
+
+<div id="communicationErrorDialog" title="Error">
+    Error message here.
 </div>
 
 <script type="text/template" id="commentTemplate">

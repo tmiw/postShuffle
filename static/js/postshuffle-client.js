@@ -291,11 +291,11 @@ $(function(){
             if (!username || !password || !email || !confirmPassword ||
                 !confirmEmail)
             {
-                alert("Must fill in all fields");
+                $( "#registrationMissingFieldsError" ).dialog("open");
             }
             else if (confirmEmail != email || confirmPassword != password)
             {
-                alert("Email and passwords must match.");
+                $( "#registrationMatchingFieldsError" ).dialog("open");
             }
             else
             {
@@ -311,13 +311,15 @@ $(function(){
                     if (data.status == "ok")
                     {
                         // register successful
+                        $( "#registrationSuccessfulMessage" ).dialog("open");
                     }
                     else
                     {
-                        alert(data.error);
+                        $( "#errorDialog" ).val(data.error);
+                        $( "#errorDialog" ).dialog("open");
                     }
                 }).error(function(xhr, textStatus, errorThrown) {
-                    alert(textStatus);
+                    $( "#communicationErrorDialog" ).dialog("open");
                 });
             }
         },
@@ -338,10 +340,11 @@ $(function(){
                 }
                 else
                 {
-                    alert(data.error);
+                    $( "#errorDialog" ).val(data.error);
+                    $( "#errorDialog" ).dialog("open");
                 }
             }).error(function(xhr, textStatus, errorThrown) {
-                alert(textStatus);
+                $( "#communicationErrorDialog" ).dialog("open");
             });
         }
     });
@@ -376,10 +379,11 @@ $(function(){
                 }
                 else
                 {
-                    alert(data.error);
+                    $( "#errorDialog" ).val(data.error);
+                    $( "#errorDialog" ).dialog("open");
                 }
             }).error(function(xhr, textStatus, errorThrown) {
-                alert(textStatus);
+                $( "#communicationErrorDialog" ).dialog("open");
             });
         }
     });
