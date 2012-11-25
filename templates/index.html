@@ -41,6 +41,7 @@
                     event.preventDefault();
                     var val = $( this ).val();
                     addNonExistingTag(val);
+                    $(this).val("");
                 }
             }).autocomplete({
                 minLength: 0,
