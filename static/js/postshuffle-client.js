@@ -262,12 +262,21 @@ $(function(){
         events: {
             'click .loginButton': 'submitLoginRequest',
             'click .registerLink': 'toggleRegisterBox',
-            'click .registerButton': 'submitRegistrationRequest'
+            'click .registerButton': 'submitRegistrationRequest',
+            'keydown .usernameField': 'formKeyDown',
+            'keydown .passwordField': 'formKeyDown'
         },
         
         render: function() {
           this.$el.html(this.template());
           return this;
+        },
+        
+        formKeyDown: function(e) {
+            if (e.which == 13)
+            {
+                this.submitLoginRequest();
+            }
         },
         
         toggleRegisterBox: function() {
