@@ -143,7 +143,27 @@ module.exports = (function() {
                                 }
                                 else
                                 {
-                                    self.emitSuccess({});
+                                    AppConfig.mailer.sendMail({
+                                        from: AppConfig.mail_from,
+                                        to: user.email,
+                                        subject: AppConfig.mail_subjects.password_reset,
+                                        html: html,
+                                        generateTextFromHTML: true
+                                    }, function(err, res) {
+                                        if (err)
+                                        {
+                                            user.password = oldpw;
+                                            user.save().success(function() {
+                                                self.emitFailure(err);
+                                            }).error(function(e) {
+                                                self.emitFailure(e);
+                                            });
+                                        }
+                                        else
+                                        {
+                                            self.emitSuccess({});
+                                        }
+                                    });
                                 }
                             });
                     }).error(function(err) {

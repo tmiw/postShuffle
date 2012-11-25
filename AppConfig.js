@@ -33,9 +33,10 @@ var settings = function() {
     // instructions.
     this.mailer = nodemailer.createTransport("sendmail");
     
-    this.mail_from = "postShuffle <mooneer@gmail.com>";
+    this.mail_from = "postShuffle <xyz@abc.def>";
     this.mail_subjects = {
-        register_confirm: 'Confirm your registration'
+        register_confirm: 'Confirm your registration',
+        password_reset: 'Password reset'
     };
 };
 
