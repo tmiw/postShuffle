@@ -6,6 +6,7 @@ var util           = require("util");
 var DataModel      = require("../DataModel");
 var AppConfig      = require('../AppConfig.js');
 var consolidate    = require('consolidate');
+var generator      = require("../Utility/RandomGenerators");
 
 module.exports = (function() {
     /**
@@ -89,19 +90,8 @@ module.exports = (function() {
      */
     User.prototype.reset_password = function(json_args, session_data, query_args, params) {
         var self = this;
-        
-        var randomString = function() {
-            var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-            var string_length = 8;
-            var randomstring = '';
-            for (var i=0; i<string_length; i++) {
-                var rnum = Math.floor(Math.random() * chars.length);
-                randomstring += chars.substring(rnum,rnum+1);
-            }
-            return randomstring;
-        };
-
         var username = json_args.username || query_args.username;
+        
         if (!username)
         {
             self.emitFailure("Must provide username.");
@@ -122,7 +112,7 @@ module.exports = (function() {
                     // Reset password.
                     var user = u_list[0];
                     var oldpw = user.password;
-                    user.password = randomString();
+                    user.password = generator.randomString();
                     user.save().success(function() {
                         consolidate.mustache(
                             __dirname + "/../templates/email/reset_password.html",
@@ -220,10 +210,7 @@ module.exports = (function() {
                     else
                     {
                         // Generate unique confirmation code.
-                        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                            return v.toString(16);
-                        });
+                        var uuid = generator.uuid();
                         
                         DataModel.Users.create({
                             username: username,
