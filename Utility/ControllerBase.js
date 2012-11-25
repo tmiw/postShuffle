@@ -55,7 +55,7 @@ module.exports = (function() {
             // of input JSON.
             var fail_f = function(err) {
                 self.removeListener('success', success_f);
-                res.send(500, {
+                res.send({
                     'status': 'fail',
                     'error': err
                 });
