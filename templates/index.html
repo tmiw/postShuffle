@@ -17,18 +17,36 @@
             loadUserData({{ &user_data }});
             loadInitialPosts({{ &data }});
             
+            var addNonExistingTag = function(tag)
+            {
+                var tags = $("#newPostForm .postTag");
+                var found = false;
+                for (var i in tags)
+                {
+                    if (tags[i].innerText == tag)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    $("#newPostForm .postTags").append("<li class='postTag'>" + tag + "</li> ");
+                }
+            };
+            
             $( "#tagBox" ).bind( "keydown", function( event ) {
                 if ( event.keyCode === $.ui.keyCode.ENTER &&
                         !$( this ).data( "autocomplete" ).menu.active ) {
                     event.preventDefault();
                     var val = $( this ).val();
-                    $("#newPostForm .postTags").append("<li class='postTag'>" + val + "</li> ");
+                    addNonExistingTag(val);
                 }
             }).autocomplete({
                 minLength: 0,
                 source: "/tag",
                 select: function( event, ui ) {
-                    $("#newPostForm .postTags").append("<li class='postTag'>" + ui.item.value + "</li> ");
+                    addNonExistingTag(ui.item.value);
                     return false;
                 }
             });
