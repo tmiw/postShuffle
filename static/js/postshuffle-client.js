@@ -364,6 +364,38 @@ $(function(){
                     $( "#communicationErrorDialog" ).dialog("open");
                 });
             }
+        },
+        
+        submitPasswordResetRequest: function() {
+            var username = this.$(".usernameField").val();
+            
+            if (!username)
+            {
+                // TODO: correct dialog template.
+                $( "#registrationMissingFieldsError" ).dialog("open");
+            }
+            else
+            {
+                $.ajax('/user/reset_password', {
+                    type: "POST",
+                    data: {
+                        username: username
+                    },
+                    cache: false
+                }).success(function(data, textStatus, xhr) {
+                    if (data.status == "ok")
+                    {
+                        // reset successful.
+                        $( "#resetSuccessfulMessage" ).dialog("open");
+                    }
+                    else
+                    {
+                        $( "#internalErrorDialog" ).dialog("open");
+                    }
+                }).error(function(xhr, textStatus, errorThrown) {
+                    $( "#communicationErrorDialog" ).dialog("open");
+                });
+            }
         }
     });
     

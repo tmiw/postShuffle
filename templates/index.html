@@ -67,6 +67,11 @@
                 buttons: { OK: function() { $( this ).dialog( "close" ); } } 
             });
             
+            $( "#resetSuccessfulMessage" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
             $( "#loginErrorDialog" ).dialog({ 
                 autoOpen: false,
                 buttons: { OK: function() { $( this ).dialog( "close" ); } } 
@@ -117,9 +122,14 @@
     Check your email for further instructions.
 </div>
 
+<div id="resetSuccessfulMessage" title="Password Reset Successful">
+    Check your email for further instructions.
+</div>
+
 <div id="loginErrorDialog" title="Error">
     Could not log in. Check your username/password. If you do not know your
-    password, click here to retrieve it.
+    password, <a href="javascript:window.app.topView.submitPasswordResetRequest();">click here</a>
+    to retrieve it.
 </div>
 
 <div id="internalErrorDialog" title="Error">

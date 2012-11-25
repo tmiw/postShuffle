@@ -25,6 +25,7 @@ module.exports = (function() {
     User.prototype.link_routes = function() {        
         this.__app.get("/user/login", this.json(this.login));
         this.__app.post("/user/register", this.json(this.register));
+        this.__app.post("/user/reset_password", this.json(this.reset_password));
         this.__app.get("/user/logout", this.logout);
         this.__app.get(/^\/user\/confirm\/([A-Fa-f0-9\-]+)$/, this.confirm_register);
     };
@@ -76,6 +77,85 @@ module.exports = (function() {
         // not being attached soon enough.
         req.session.user = null;
         res.send({ 'status': 'ok' });
+    };
+    
+    /**
+     * Resets user's password.
+     * @param {Object} json_args Dictionary of arguments (username).
+     * @param {Object} session_data Session data.
+     * @param {Object} query_args Query string arguments.
+     * @param {Object} params List of URL parameters.
+     * @returns {Array} Data corresponding to the logged in user.
+     */
+    User.prototype.reset_password = function(json_args, session_data, query_args, params) {
+        var self = this;
+        
+        var randomString = function() {
+            var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+            var string_length = 8;
+            var randomstring = '';
+            for (var i=0; i<string_length; i++) {
+                var rnum = Math.floor(Math.random() * chars.length);
+                randomstring += chars.substring(rnum,rnum+1);
+            }
+            return randomstring;
+        };
+
+        var username = json_args.username || query_args.username;
+        if (!username)
+        {
+            self.emitFailure("Must provide username.");
+        }
+        else
+        {
+            DataModel.Users.findAll({
+                where: {
+                    username: username
+                }
+            }).success(function(u_list) {
+                if (!u_list || u_list.length === 0)
+                {
+                    self.emitFailure("Cannot find user.");
+                }
+                else
+                {
+                    // Reset password.
+                    var user = u_list[0];
+                    var oldpw = user.password;
+                    user.password = randomString();
+                    user.save().success(function() {
+                        consolidate.mustache(
+                            __dirname + "/../templates/email/reset_password.html",
+                            {
+                                username: username,
+                                new_password: user.password
+                            },
+                            function(err, html)
+                            {
+                                if (err)
+                                {
+                                    user.password = oldpw;
+                                    user.save().success(function() {
+                                        self.emitFailure(err);
+                                    }).error(function(e) {
+                                        self.emitFailure(e);
+                                    });
+                                }
+                                else
+                                {
+                                    self.emitSuccess({});
+                                }
+                            });
+                    }).error(function(err) {
+                        self.emitFailure(err);
+                    });
+                }
+            }).error(function(err) {
+                self.emitFailure(err);
+            });
+        }
+        
+        return self;
     };
     
     /**
