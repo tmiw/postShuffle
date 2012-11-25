@@ -49,12 +49,17 @@ li.post .postRight {
     display: none;
 }
 
-li.post .postTag a {
+.postTag a {
     color: white;
     text-decoration: none;
 }
 
-li.post .postTag a:hover {
+.postTag a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.postTag a:hover {
     color: white;
     text-decoration: underline;
 }

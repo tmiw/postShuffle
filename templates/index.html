@@ -31,7 +31,7 @@
                 }
                 if (!found)
                 {
-                    $("#newPostForm .postTags").append("<li class='postTag'>" + tag + "</li> ");
+                    $("#newPostForm .postTags").append("<li class='postTag'><a href='#' onclick='this.parentNode.removeChild(this); return false;'>" + tag + "</a></li> ");
                 }
             };
             
