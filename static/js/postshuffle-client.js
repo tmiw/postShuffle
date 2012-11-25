@@ -334,27 +334,38 @@ $(function(){
         },
         
         submitLoginRequest: function() {
-            $.ajax('/user/login', {
-                type: "GET",
-                data: {
-                    username: this.$(".usernameField").val(),
-                    password: this.$(".passwordField").val()
-                },
-                cache: false
-            }).success(function(data, textStatus, xhr) {
-                if (data.status == "ok")
-                {
-                    // login successful, reload page.
-                    window.location.reload();
-                }
-                else
-                {
-                    $( "#errorDialog" ).val(data.error);
-                    $( "#errorDialog" ).dialog("open");
-                }
-            }).error(function(xhr, textStatus, errorThrown) {
-                $( "#communicationErrorDialog" ).dialog("open");
-            });
+            var username = this.$(".usernameField").val();
+            var password = this.$(".passwordField").val();
+            
+            if (!username || !password)
+            {
+                // TODO: correct dialog template.
+                $( "#registrationMissingFieldsError" ).dialog("open");
+            }
+            else
+            {
+                $.ajax('/user/login', {
+                    type: "GET",
+                    data: {
+                        username: username,
+                        password: password
+                    },
+                    cache: false
+                }).success(function(data, textStatus, xhr) {
+                    if (data.status == "ok")
+                    {
+                        // login successful, reload page.
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        $( "#errorDialog" ).val(data.error);
+                        $( "#errorDialog" ).dialog("open");
+                    }
+                }).error(function(xhr, textStatus, errorThrown) {
+                    $( "#communicationErrorDialog" ).dialog("open");
+                });
+            }
         }
     });
     
