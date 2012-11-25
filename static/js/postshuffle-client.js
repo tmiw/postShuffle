@@ -324,8 +324,7 @@ $(function(){
                     }
                     else
                     {
-                        $( "#errorDialog" ).val(data.error);
-                        $( "#errorDialog" ).dialog("open");
+                        $( "#internalErrorDialog" ).dialog("open");
                     }
                 }).error(function(xhr, textStatus, errorThrown) {
                     $( "#communicationErrorDialog" ).dialog("open");
@@ -359,8 +358,7 @@ $(function(){
                     }
                     else
                     {
-                        $( "#errorDialog" ).val(data.error);
-                        $( "#errorDialog" ).dialog("open");
+                        $( "#loginErrorDialog" ).dialog("open");
                     }
                 }).error(function(xhr, textStatus, errorThrown) {
                     $( "#communicationErrorDialog" ).dialog("open");
@@ -399,8 +397,7 @@ $(function(){
                 }
                 else
                 {
-                    $( "#errorDialog" ).val(data.error);
-                    $( "#errorDialog" ).dialog("open");
+                    $( "#internalErrorDialog" ).dialog("open");
                 }
             }).error(function(xhr, textStatus, errorThrown) {
                 $( "#communicationErrorDialog" ).dialog("open");

@@ -67,7 +67,12 @@
                 buttons: { OK: function() { $( this ).dialog( "close" ); } } 
             });
             
-            $( "#errorDialog" ).dialog({ 
+            $( "#loginErrorDialog" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
+            $( "#internalErrorDialog" ).dialog({ 
                 autoOpen: false,
                 buttons: { OK: function() { $( this ).dialog( "close" ); } } 
             });
@@ -112,8 +117,13 @@
     Check your email for further instructions.
 </div>
 
-<div id="errorDialog" title="Error">
-    Error message here.
+<div id="loginErrorDialog" title="Error">
+    Could not log in. Check your username/password. If you do not know your
+    password, click here to retrieve it.
+</div>
+
+<div id="internalErrorDialog" title="Error">
+    Sever error. Please try again.
 </div>
 
 <div id="communicationErrorDialog" title="Error">
