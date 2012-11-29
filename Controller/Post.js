@@ -63,14 +63,22 @@ module.exports = (function() {
             self.emitFailure(err);
         };
         
-        if (!json_args.title || !json_args.body)
+        if (!session_data.user)
+        {
+            error_f("Must log in to post.");
+        }
+        else if (!json_args.title || !json_args.body)
         {
             error_f("Must provide a title and body.");
         }
         else 
         {
-            // TODO: find valid user.
-            DataModel.Users.find(1).success(function(user) {
+            DataModel.Users.findAll({
+                where: {
+                    username: session_data.user.username
+                }
+            }).success(function(users) {
+                var user = users[0];
                 DataModel.Posts.create({
                     'title': json_args.title,
                     'body': json_args.body

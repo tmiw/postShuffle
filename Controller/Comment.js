@@ -41,7 +41,11 @@ module.exports = (function() {
             self.emitFailure(err);
         };
         
-        if (!json_args.body || !post_id)
+        if (!session_data.user)
+        {
+            error_f("Must log in to post.");
+        }
+        else if (!json_args.body || !post_id)
         {
             error_f("Must provide a body and post ID.");
         }
@@ -55,13 +59,18 @@ module.exports = (function() {
                 }
                 else
                 {
-                    DataModel.Users.find(1).success(function(user) {
-                        if (!user) 
+                    DataModel.Users.findAll({
+                        where: {
+                            username: session_data.user.username
+                        }
+                    }).success(function(users) {
+                        if (!users || users.length === 0) 
                         {
                             error_f("Invaid user.");
                         }
                         else
                         {
+                            var user = users[0];
                             DataModel.Comments.create({
                                 'body': json_args.body
                             }).success(function(comment) {
