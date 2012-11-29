@@ -47,8 +47,63 @@ module.exports = (function() {
             });
         
         this.__app.put("/post/:pid", this.json(this.edit_post));
+        this.__app.delete("/post/:pid", this.json(this.delete_post));
         this.__app.put("/post", this.json(this.add_new_post));
         this.__app.get("/post", this.json(this.get_posts));
+    };
+    
+    /**
+     * Deletes existing post.
+     * @param {Object} json_args Arguments passed in by browser.
+     * @param {Object} session_data Current session data.
+     * @param {Object} params URL parameters.
+     * @returns {Array} Data corresponding to the new post.
+     */
+    Post.prototype.delete_post = function(json_args, session_data, query_args, params) {
+        var self = this;
+        var postId = parseInt(params.pid, 10);
+        var error_f = function(err) {
+            self.emitFailure(err);
+        };
+        
+        if (!session_data.user)
+        {
+            error_f("Must log in to post.");
+        }
+        else 
+        {
+            DataModel.Users.findAll({
+                where: {
+                    username: session_data.user.username
+                }
+            }).success(function(users) {
+                var user = users[0];
+                DataModel.Posts.find(postId).success(function(post) {
+                    if (
+                        post.UserId != user.id &&
+                        !user.is_moderator &&
+                        !user.is_admin)
+                    {
+                        error_f("Not enough permissions to delete post.");
+                    }
+                    else
+                    {
+                        post.getComments().success(function(comments) {
+                            var chainer = new Sequelize.Utils.QueryChainer();
+                            for (var i in comments)
+                            {
+                                chainer.add(comments[i].destroy());
+                            }
+                            
+                            chainer.add(post.destroy());
+                            chainer.runSerially({ skipOnError: true }).success(function() {
+                                self.emitSuccess({});
+                            }).error(error_f);
+                        }).error(error_f);
+                    }
+                }).error(error_f);
+            }).error(error_f);
+        }
     };
     
     /**

@@ -144,7 +144,8 @@ $(function(){
         
         events: {
             'click .postTitle': 'expandBody',
-            'click .editPost': 'showEditUI'
+            'click .editPost': 'showEditUI',
+            'click .deletePost': 'deletePost'
         },
         
         template: _.template($('#postTemplate').html()),
@@ -169,6 +170,17 @@ $(function(){
                 this.$el.html(this.template(this.model.toJSON()));
             }
             return this;
+        },
+        
+        deletePost: function() {
+            // TODO: localization
+            if (window.confirm("Are you sure?"))
+            {
+                this.model.destroy({
+                    sync: true,
+                    error: function() { $('.internalErrorDialog').dialog("open"); }
+                });
+            }
         },
         
         showEditUI: function() {
