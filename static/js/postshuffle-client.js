@@ -143,11 +143,16 @@ $(function(){
         className: 'post',
         
         events: {
-            'click .postTitle': 'expandBody'
+            'click .postTitle': 'expandBody',
+            'click .editPost': 'showEditUI'
         },
         
         template: _.template($('#postTemplate').html()),
     
+        editTemplate: _.template($('#postEditTemplate').html()),
+        
+        postBodyOnlyTemplate: _.template("<%- body %>"),
+        
         initialize: function() {
           this.model.bind('change', this.render, this);
           this.model.bind('destroy', this.remove, this);
@@ -160,6 +165,24 @@ $(function(){
         render: function() {
           this.$el.html(this.template(this.model.toJSON()));
           return this;
+        },
+        
+        showEditUI: function() {
+            this.$('.bodyText').empty();
+            this.$('.bodyText').append(this.editTemplate(this.model.toJSON()));
+            this.events['click .saveEditPostButton'] = 'savePost';
+            this.events['click .cancelEditPostButton'] = 'cancelEditPost';
+            this.delegateEvents();
+        },
+        
+        savePost: function() { /* TBD */ },
+        
+        cancelEditPost: function() {
+            delete this.events['click .saveEditPostButton'];
+            delete this.events['click .cancelEditPostButton'];
+            this.delegateEvents();
+            this.$('.bodyText').empty();
+            this.$('.bodyText').append(this.postBodyOnlyTemplate(this.model.toJSON()));
         },
         
         expandBody: function() {
