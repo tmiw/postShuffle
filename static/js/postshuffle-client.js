@@ -173,12 +173,25 @@ $(function(){
             this.commentView.comments.fetch({wait: true});
             
             this.$('.postBody').css('display', 'block');
+            
+            if (window.app.user)
+            {
+                if (
+                    this.model.get('author').username == window.app.user.username ||
+                    window.app.user.is_moderator ||
+                    window.app.user.is_administrator)
+                {
+                    this.$('.postTools').css('display', 'block');
+                }
+            }
+            
             this.events['click .postTitle'] = 'hideBody';
             this.delegateEvents();
         },
         
         hideBody: function() {
             this.$('.postBody').css('display', 'none');
+            this.$('.postTools').css('display', 'none');
             this.events['click .postTitle'] = 'expandBody';
             this.delegateEvents();
         }

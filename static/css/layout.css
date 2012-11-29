@@ -38,6 +38,10 @@ li.post .postRight {
     font-size: 10pt;
 }
 
+.postTools {
+    display: none;
+}
+
 .postTag {
     display: inline;
     list-style-type: none;
