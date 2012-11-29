@@ -163,8 +163,12 @@ $(function(){
         },
         
         render: function() {
-          this.$el.html(this.template(this.model.toJSON()));
-          return this;
+            if (!this.isExpanded)
+            {
+                // Suppress re-render if expanded.
+                this.$el.html(this.template(this.model.toJSON()));
+            }
+            return this;
         },
         
         showEditUI: function() {
@@ -175,7 +179,18 @@ $(function(){
             this.delegateEvents();
         },
         
-        savePost: function() { /* TBD */ },
+        savePost: function() {
+            var self = this;
+            var newBody = self.$('.editPostBody').val();
+            self.model.save('body', newBody, {
+                sync: true,
+                success: function() {
+                    // Close functionality shared.
+                    self.cancelEditPost();
+                },
+                error: function() { $('.internalErrorDialog').dialog("open"); }
+            });
+        },
         
         cancelEditPost: function() {
             delete this.events['click .saveEditPostButton'];
@@ -210,6 +225,7 @@ $(function(){
             
             this.events['click .postTitle'] = 'hideBody';
             this.delegateEvents();
+            this.isExpanded = true;
         },
         
         hideBody: function() {
@@ -217,6 +233,7 @@ $(function(){
             this.$('.postTools').css('display', 'none');
             this.events['click .postTitle'] = 'expandBody';
             this.delegateEvents();
+            this.isExpanded = false;
         }
     });
     
