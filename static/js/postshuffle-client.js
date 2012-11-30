@@ -13,6 +13,12 @@ $.ajaxSetup({
     }
 });
 
+function htmlRepresentation(text)
+{
+    // TODO: bbcode?
+    return text.replace("<", "&lt;").replace(">", "&gt;").replace(/\r?\n/, "<br/>\r\n");
+}
+
 $(function(){
     
     var Post = Backbone.Model.extend({
@@ -152,7 +158,7 @@ $(function(){
         
         editTemplate: _.template($('#commentEditTemplate').html()),
         
-        commentBodyOnlyTemplate: _.template("<%- body %>"),
+        commentBodyOnlyTemplate: _.template("<%= htmlRepresentation(body) %>"),
         
         deleteComment: function() {
             // TODO: localization
@@ -211,7 +217,7 @@ $(function(){
     
         editTemplate: _.template($('#postEditTemplate').html()),
         
-        postBodyOnlyTemplate: _.template("<%- body %>"),
+        postBodyOnlyTemplate: _.template("<%= htmlRepresentation(body) %>"),
         
         initialize: function() {
           this.model.bind('change', this.render, this);

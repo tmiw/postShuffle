@@ -149,7 +149,7 @@
     <a href="#" class="deleteComment">delete post</a>
 </div>
 <div class="commentBody">
-  <%- body %>
+  <%= htmlRepresentation(body) %>
 </div>
 </script>
 
@@ -192,7 +192,7 @@
     </div>
 </div>
 <div class="postBody">
-    <div class="bodyText"><%- body %></div>
+    <div class="bodyText"><%= htmlRepresentation(body) %></div>
     <div class="commentBlock">
         <ul class="comments"></ul>
         <div class="moreLink"><a href="#">load more</a></div>
