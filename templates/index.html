@@ -144,9 +144,21 @@
 <div class="commentAuthor">
   by <%- author.username %>, <%- author.title %>
 </div>
+<div class="commentTools">
+    <a href="#" class="editComment">edit post</a> | 
+    <a href="#" class="deleteComment">delete post</a>
+</div>
 <div class="commentBody">
   <%- body %>
 </div>
+</script>
+
+<script type="text/template" id="commentEditTemplate">
+<form class="editCommentForm">
+    <textarea class="editCommentBody" rows="5" cols="50"><%- body %></textarea><br />
+    <input type="button" class="saveEditCommentButton" value="Save" />
+    <input type="button" class="cancelEditCommentButton" value="Cancel" />
+</form>
 </script>
 
 <script type="text/template" id="postEditTemplate">

@@ -42,6 +42,10 @@ li.post .postRight {
     display: none;
 }
 
+.commentTools {
+    display: none;
+}
+
 .postTag {
     display: inline;
     list-style-type: none;

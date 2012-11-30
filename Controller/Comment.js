@@ -20,9 +20,121 @@ module.exports = (function() {
     /**
      * Links controller's routes to application.
      */
-    Comment.prototype.link_routes = function() {        
+    Comment.prototype.link_routes = function() {   
+        this.__app.delete("/comment/:pid/:cid", this.json(this.delete_comment));
+        this.__app.put("/comment/:pid/:cid", this.json(this.edit_comment));
         this.__app.put("/comment/:cid", this.json(this.add_new_comment));
         this.__app.get("/comment/:cid", this.json(this.get_comments));
+    };
+    
+    /**
+     * Edits existing comment.
+     * @param {Object} json_args Arguments passed in by browser.
+     * @param {Object} session_data Current session data.
+     * @param {Object} params URL parameters.
+     * @returns {Array} Data corresponding to the new post.
+     */
+    Comment.prototype.edit_comment = function(json_args, session_data, query_args, params) {
+        var self = this;
+        var commentId = parseInt(params.cid, 10);
+        var postId = parseInt(params.pid, 10);
+        var error_f = function(err) {
+            self.emitFailure(err);
+        };
+        
+        if (!session_data.user)
+        {
+            error_f("Must log in to post.");
+        }
+        else if (!json_args.body)
+        {
+            error_f("Must specify new body for comment.");
+        }
+        else 
+        {
+            DataModel.Users.findAll({
+                where: {
+                    username: session_data.user.username
+                }
+            }).success(function(users) {
+                var user = users[0];
+                DataModel.Comments.find(commentId).success(function(comment) {
+                    if (comment.UserId != user.id &&
+                        !user.is_moderator &&
+                        !user.is_admin)
+                    {
+                        error_f("Not enough permissions to delete comment.");
+                    }
+                    else
+                    {
+                        comment.body = json_args.body;
+                        comment.save().success(function() {
+                            self.emitSuccess({
+                                'author': {
+                                    'username': user.username,
+                                    'title': user.title,
+                                    'is_moderator': user.is_moderator,
+                                    'is_admin': user.is_admin,
+                                    'joined': user.createdAt
+                                },
+                                'body': comment.body,
+                                'id': comment.id,
+                                'create_date': comment.createdAt.toUTCString(),
+                                'update_date': comment.updatedAt.toUTCString()
+                            });
+                        }).error(error_f);
+                    }
+                }).error(error_f);
+            }).error(error_f);
+        }
+        
+        return this;
+    };
+    
+    /**
+     * Deletes existing comment.
+     * @param {Object} json_args Arguments passed in by browser.
+     * @param {Object} session_data Current session data.
+     * @param {Object} params URL parameters.
+     * @returns {Array} Data corresponding to the new post.
+     */
+    Comment.prototype.delete_comment = function(json_args, session_data, query_args, params) {
+        var self = this;
+        var commentId = parseInt(params.cid, 10);
+        var error_f = function(err) {
+            self.emitFailure(err);
+        };
+        
+        if (!session_data.user)
+        {
+            error_f("Must log in to post.");
+        }
+        else 
+        {
+            DataModel.Users.findAll({
+                where: {
+                    username: session_data.user.username
+                }
+            }).success(function(users) {
+                var user = users[0];
+                DataModel.Comments.find(commentId).success(function(comment) {
+                    if (comment.UserId != user.id &&
+                        !user.is_moderator &&
+                        !user.is_admin)
+                    {
+                        error_f("Not enough permissions to delete comment.");
+                    }
+                    else
+                    {
+                        comment.destroy().success(function() {
+                            self.emitSuccess({});
+                        }).error(error_f);
+                    }
+                }).error(error_f);
+            }).error(error_f);
+        }
+        
+        return this;
     };
     
     /**

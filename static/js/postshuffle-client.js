@@ -117,7 +117,10 @@ $(function(){
         
         className: 'comment',
         
-        events: { /* TBD */ },
+        events: {
+            'click .editComment': 'showEditUI',
+            'click .deleteComment': 'deleteComment'
+        },
         
         template: _.template($('#commentTemplate').html()),
         
@@ -131,9 +134,65 @@ $(function(){
         },
         
         render: function() {
-          this.$el.html(this.template(this.model.toJSON()));
-          return this;
-        }
+            this.$el.html(this.template(this.model.toJSON()));
+          
+            if (window.app.user)
+            {
+                if (
+                    this.model.get('author').username == window.app.user.username ||
+                    window.app.user.is_moderator ||
+                    window.app.user.is_administrator)
+                {
+                    this.$('.commentTools').css('display', 'block');
+                }
+            }
+            
+            return this;
+        },
+        
+        editTemplate: _.template($('#commentEditTemplate').html()),
+        
+        commentBodyOnlyTemplate: _.template("<%- body %>"),
+        
+        deleteComment: function() {
+            // TODO: localization
+            if (window.confirm("Are you sure?"))
+            {
+                this.model.destroy({
+                    sync: true,
+                    error: function() { $('.internalErrorDialog').dialog("open"); }
+                });
+            }
+        },
+        
+        showEditUI: function() {
+            this.$('.commentBody').empty();
+            this.$('.commentBody').append(this.editTemplate(this.model.toJSON()));
+            this.events['click .saveEditCommentButton'] = 'saveComment';
+            this.events['click .cancelEditCommentButton'] = 'cancelEditComment';
+            this.delegateEvents();
+        },
+        
+        saveComment: function() {
+            var self = this;
+            var newBody = self.$('.editCommentBody').val();
+            self.model.save('body', newBody, {
+                sync: true,
+                success: function() {
+                    // Close functionality shared.
+                    self.cancelEditComment();
+                },
+                error: function() { $('.internalErrorDialog').dialog("open"); }
+            });
+        },
+        
+        cancelEditComment: function() {
+            delete this.events['click .saveEditCommentButton'];
+            delete this.events['click .cancelEditCommentButton'];
+            this.delegateEvents();
+            this.$('.commentBody').empty();
+            this.$('.commentBody').append(this.commentBodyOnlyTemplate(this.model.toJSON()));
+        },
     });
     
     var PostView = Backbone.View.extend({
