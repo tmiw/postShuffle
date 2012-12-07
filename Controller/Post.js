@@ -38,7 +38,7 @@ module.exports = (function() {
                 self.get_posts({
                     'tag_list': req.params, 
                     'offset': 0
-                    }, req.session).success(function(data) {
+                    }, req.session, {}).success(function(data) {
                     res.render('index', {
                         'title': 'PostShuffle: home',
                         'data': JSON.stringify(data)
