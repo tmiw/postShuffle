@@ -19,6 +19,16 @@ function htmlRepresentation(text)
     return text.replace("<", "&lt;").replace(">", "&gt;").replace(/\r?\n/, "<br/>\r\n");
 }
 
+function addTagToQuery(tag)
+{
+    var new_tags_array = window.app.current_tags.concat([tag]);
+    window.Posts.fetch({
+        data: {
+            offset: 0,
+            tag_list: new_tags_array}});
+    window.app.routes.navigate("t/" + new_tags_array.join("/"), {trigger: true});
+}
+
 $(function(){
     
     var Post = Backbone.Model.extend({
@@ -622,6 +632,7 @@ $(function(){
         },
         
         addAll: function() {
+            this.$("#postList").empty();
             if (window.Posts.length > 0)
             {
                 window.Posts.each(this.addOne);
@@ -643,7 +654,26 @@ $(function(){
         }
     });
 
+    var routes = Backbone.Router.extend({
+        routes: {
+            "": "index",
+            "t/*tags": "index_tags"
+        },
+        
+        index: function()
+        {
+            window.app.current_tags = [];
+        },
+        
+        index_tags: function(tags)
+        {
+            window.app.current_tags = tags.split("/");
+        }
+    });
+    
     window.app = new PostListView();
+    window.app.routes = new routes();
+    Backbone.history.start({pushState: true});
 });
 
 function loadInitialPosts(jsonData)

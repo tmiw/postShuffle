@@ -178,7 +178,7 @@
         </div>
         Tags: <ul class="postTags">
             <% _.each(tags, function(tag) { %>
-                <li class="postTag"><a href="/t/<%= tag %>"><%- tag %></a></li>
+                <li class="postTag"><a href="javascript:addTagToQuery(&quot;<%= tag %>&quot;);"><%- tag %></a></li>
             <% }) %>
         </ul>
     </div>
