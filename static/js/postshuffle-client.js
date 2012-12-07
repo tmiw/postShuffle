@@ -22,10 +22,6 @@ function htmlRepresentation(text)
 function addTagToQuery(tag)
 {
     var new_tags_array = window.app.current_tags.concat([tag]);
-    window.Posts.fetch({
-        data: {
-            offset: 0,
-            tag_list: new_tags_array}});
     window.app.routes.navigate("t/" + new_tags_array.join("/"), {trigger: true});
 }
 
@@ -663,11 +659,21 @@ $(function(){
         index: function()
         {
             window.app.current_tags = [];
+            this.fetch_common();
         },
         
         index_tags: function(tags)
         {
             window.app.current_tags = tags.split("/");
+            this.fetch_common();
+        },
+        
+        fetch_common: function()
+        {
+            window.Posts.fetch({
+                data: {
+                    offset: 0,
+                    tag_list: window.app.current_tags}});
         }
     });
     
