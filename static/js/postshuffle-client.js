@@ -214,7 +214,7 @@ $(function(){
         className: 'post',
         
         events: {
-            'click .postTitle': 'expandBody',
+            'click .postTitle': 'doExpandBody',
             'click .editPost': 'showEditUI',
             'click .deletePost': 'deletePost'
         },
@@ -281,6 +281,10 @@ $(function(){
             this.delegateEvents();
             this.$('.bodyText').empty();
             this.$('.bodyText').append(this.postBodyOnlyTemplate(this.model.toJSON()));
+        },
+        
+        doExpandBody: function() {
+            window.app.routes.navigate("p/" + this.model.id, {trigger: true});    
         },
         
         expandBody: function() {
@@ -624,18 +628,21 @@ $(function(){
         
         addOne: function(item) {
           var view = new PostView({model: item});
+          window.postViews.push(view);
           this.$("#postList").append(view.render().el);
         },
         
         addAll: function() {
-            this.$("#postList").empty();
+            var self = this;
+            self.$("#postList").empty();
+            window.postViews = [];
             if (window.Posts.length > 0)
             {
-                window.Posts.each(this.addOne);
+                window.Posts.each(self.addOne);
             }
             else
             {
-                this.$("#postList").append(_.template($('#noPostTemplate').html()));
+                self.$("#postList").append(_.template($('#noPostTemplate').html()));
             }
         },
         
@@ -653,7 +660,8 @@ $(function(){
     var routes = Backbone.Router.extend({
         routes: {
             "": "index",
-            "t/*tags": "index_tags"
+            "t/*tags": "index_tags",
+            "p/:pid": "view_post"
         },
         
         index: function()
@@ -674,6 +682,22 @@ $(function(){
                 data: {
                     offset: 0,
                     tag_list: window.app.current_tags}});
+        },
+        
+        view_post: function(pid)
+        {
+            for (var postId in window.postViews)
+            {
+                var post = window.postViews[postId];
+                if (post.model.id == pid)
+                {
+                    post.expandBody();
+                }
+                else 
+                {
+                    post.hideBody();
+                }
+            }
         }
     });
     
