@@ -706,12 +706,12 @@ $(function(){
     
     window.app = new PostListView();
     window.app.routes = new routes();
-    Backbone.history.start({pushState: true});
 });
 
 function loadInitialPosts(jsonData)
 {
     window.Posts.reset(jsonData.posts);
+    Backbone.history.start({pushState: true});
 }
 
 function loadUserData(jsonData)

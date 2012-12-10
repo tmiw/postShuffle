@@ -45,7 +45,22 @@ module.exports = (function() {
                     });
                 });
             });
-        
+            
+        this.__app.get(
+            /^\/p\/(\d+)$/,
+           function(req, res)
+            {
+                self.get_posts({
+                    'post_id': req.params[0], 
+                    'offset': 0
+                    }, req.session, {}).success(function(data) {
+                    res.render('index', {
+                        'title': 'PostShuffle: home',
+                        'data': JSON.stringify(data)
+                    });
+                });
+            });
+            
         this.__app.put("/post/:pid", this.json(this.edit_post));
         this.__app.delete("/post/:pid", this.json(this.delete_post));
         this.__app.put("/post", this.json(this.add_new_post));
@@ -300,7 +315,7 @@ module.exports = (function() {
     
     /**
      * Retrieves posts, given a list of tags and an offset.
-     * @param {Object} json_args Dictionary of arguments (offset and tag_list).
+     * @param {Object} json_args Dictionary of arguments (offset, post_id and tag_list).
      * @param {Object} session_data Session data.
      * @return {Array} The list of posts.
      */
@@ -308,6 +323,7 @@ module.exports = (function() {
         var self = this;
         var tag_list = json_args.tag_list || query_args.tag_list || [];
         var offset = json_args.offset || query_args.offset || 0;
+        var post_id = json_args.post_id || query_args.post_id;
         
         var query = {
             'offset': offset, 
@@ -389,6 +405,13 @@ module.exports = (function() {
         }
         else
         {
+            if (post_id)
+            {
+                // Grab all posts that are the current post and newer.
+                // TODO: we probably don't want to grab this much if we're
+                // a busy forum.
+                query.where = ['id >= ?', post_id];
+            }
             DataModel.Posts.findAll(query).success(success_f).error(failure_f);
         }
         
