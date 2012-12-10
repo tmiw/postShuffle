@@ -692,6 +692,9 @@ $(function(){
                 if (post.model.id == pid)
                 {
                     post.expandBody();
+                    $('html, body').animate({
+                        scrollTop: post.$el.offset().top
+                    }, 1000);
                 }
                 else 
                 {
