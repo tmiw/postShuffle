@@ -156,6 +156,15 @@ $(function(){
                     window.app.user.is_administrator)
                 {
                     this.$('.commentTools').css('display', 'block');
+                    if (window.app.user.is_moderator ||
+                        window.app.user.is_administrator)
+                    {
+                        this.$('.userTools').css('display', 'inline');
+                        if (window.app.user.is_administrator)
+                        {
+                            this.$('.adminTools').css('display', 'inline');
+                        }
+                    }
                 }
             }
             
@@ -307,6 +316,16 @@ $(function(){
                     window.app.user.is_administrator)
                 {
                     this.$('.postTools').css('display', 'block');
+                }
+                
+                if (window.app.user.is_moderator ||
+                    window.app.user.is_administrator)
+                {
+                    this.$('.userTools').css('display', 'inline');
+                    if (window.app.user.is_administrator)
+                    {
+                        this.$('.adminTools').css('display', 'inline');
+                    }
                 }
             }
             

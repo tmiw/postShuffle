@@ -46,6 +46,14 @@ li.post .postRight {
     display: none;
 }
 
+.userTools {
+    display: none;
+}
+
+.adminTools {
+    display: none;
+}
+
 .postTag {
     display: inline;
     list-style-type: none;

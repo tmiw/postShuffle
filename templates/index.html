@@ -142,11 +142,21 @@
 
 <script type="text/template" id="commentTemplate">
 <div class="commentAuthor">
-  by <%- author.username %>, <%- author.title %>
+  by <%- author.username %>, <%- author.title %> on <span class="commentDate">
+            <%- new Date(create_date).toLocaleDateString() %> 
+            <%- new Date(create_date).toLocaleTimeString() %>
+        </div>
 </div>
 <div class="commentTools">
     <a href="#" class="editComment">edit post</a> | 
     <a href="#" class="deleteComment">delete post</a>
+    <span class="userTools">
+    | <a href="#" class="banUser">ban user</a>
+    <span class="adminTools">
+        | <a href="#" class="adminUser">make (non-)admin</a>
+        | <a href="#" class="modUser">make (non-)mod</a>
+    </span>
+  </span>
 </div>
 <div class="commentBody">
   <%= htmlRepresentation(body) %>
@@ -184,8 +194,18 @@
     </div>
     <div class="postLeft">
         <div class="postTitle"><a href="#"><%- title %></a></div>
-        <div class="postAuthor">by <%- author.username %>, <%- author.title %></div>
+        <div class="postAuthor">
+            by <%- author.username %>, <%- author.title %>
+        </div>
         <div class="postTools">
+            <span class="userTools">
+                <a href="#" class="banUser">ban user</a>
+                <span class="adminTools">
+                    | <a href="#" class="adminUser">make (non-)admin</a>
+                    | <a href="#" class="modUser">make (non-)mod</a>
+                </span>
+                |
+            </span>
             <a href="#" class="editPost">edit post</a> | 
             <a href="#" class="deletePost">delete post</a>
         </div>
