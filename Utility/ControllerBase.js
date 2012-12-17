@@ -91,7 +91,7 @@ module.exports = (function() {
         var self = this;
         
         return function(req, res) {
-            fn.call(self, {}, req.session, req.query).success(function(data) { 
+            fn.call(self, {}, req.session, req.query, req.params).success(function(data) { 
                 res.render(template, {
                     'title': title,
                     'user_data': JSON.stringify(req.session.user),

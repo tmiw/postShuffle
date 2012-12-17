@@ -33,33 +33,31 @@ module.exports = (function() {
                 
         this.__app.get(
             /^\/t\/(\w+)(?:\/(\w+))*$/,
-           function(req, res)
-            {
-                self.get_posts({
-                    'tag_list': req.params, 
-                    'offset': 0
-                    }, req.session, {}).success(function(data) {
-                    res.render('index', {
-                        'title': 'PostShuffle: home',
-                        'data': JSON.stringify(data)
-                    });
-                });
-            });
+            this.html(
+               function(json_args, session_data, query_args, params)
+                {
+                    return self.get_posts({
+                        'tag_list': params, 
+                        'offset': 0
+                        }, session_data, {});
+                },
+                'index',
+                'PostShuffle: home')
+            );
             
         this.__app.get(
             /^\/p\/(\d+)$/,
-           function(req, res)
-            {
-                self.get_posts({
-                    'post_id': req.params[0], 
-                    'offset': 0
-                    }, req.session, {}).success(function(data) {
-                    res.render('index', {
-                        'title': 'PostShuffle: home',
-                        'data': JSON.stringify(data)
-                    });
-                });
-            });
+            this.html(
+               function(json_args, session_data, query_args, params)
+                {
+                    return self.get_posts({
+                        'post_id': params,
+                        'offset': 0
+                        }, session_data, {})
+                },
+                'index',
+                'PostShuffle: home')
+            );
             
         this.__app.put("/post/:pid", this.json(this.edit_post));
         this.__app.delete("/post/:pid", this.json(this.delete_post));
