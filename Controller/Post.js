@@ -222,7 +222,8 @@ module.exports = (function() {
                 var user = users[0];
                 DataModel.Posts.create({
                     'title': json_args.title,
-                    'body': json_args.body
+                    'body': json_args.body,
+                    'UserId': session_data.user.id
                 }).success(function(post) {
                     DataModel.Tags.findAll({where: {'tag': tags}}).success(function(tagObjs) {
                         var non_exist_list = [];
@@ -325,9 +326,14 @@ module.exports = (function() {
         
         var query = {
             'offset': offset, 
-            'limit': 5,
             'order': 'createdAt DESC'
         };
+        
+        if (!post_id)
+        {
+            // Include a limit if we're not grabbing a single post.
+            query.limit = 5;
+        }
         
         var failure_f = function(err) {
             self.emitFailure(err);
