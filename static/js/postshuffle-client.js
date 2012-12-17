@@ -153,14 +153,14 @@ $(function(){
                 if (
                     this.model.get('author').username == window.app.user.username ||
                     window.app.user.is_moderator ||
-                    window.app.user.is_administrator)
+                    window.app.user.is_admin)
                 {
                     this.$('.commentTools').css('display', 'block');
                     if (window.app.user.is_moderator ||
-                        window.app.user.is_administrator)
+                        window.app.user.is_admin)
                     {
                         this.$('.userTools').css('display', 'inline');
-                        if (window.app.user.is_administrator)
+                        if (window.app.user.is_admin)
                         {
                             this.$('.adminTools').css('display', 'inline');
                         }
@@ -313,16 +313,16 @@ $(function(){
                 if (
                     this.model.get('author').username == window.app.user.username ||
                     window.app.user.is_moderator ||
-                    window.app.user.is_administrator)
+                    window.app.user.is_admin)
                 {
                     this.$('.postTools').css('display', 'block');
                 }
                 
                 if (window.app.user.is_moderator ||
-                    window.app.user.is_administrator)
+                    window.app.user.is_admin)
                 {
                     this.$('.userTools').css('display', 'inline');
-                    if (window.app.user.is_administrator)
+                    if (window.app.user.is_admin)
                     {
                         this.$('.adminTools').css('display', 'inline');
                     }
