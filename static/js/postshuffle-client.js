@@ -337,7 +337,7 @@ $(function(){
         hideBody: function() {
             this.$('.postBody').css('display', 'none');
             this.$('.postTools').css('display', 'none');
-            this.events['click .postTitle'] = 'expandBody';
+            this.events['click .postTitle'] = 'doExpandBody';
             this.delegateEvents();
             this.isExpanded = false;
         }
