@@ -80,6 +80,12 @@ li.post .postRight {
     text-decoration: underline;
 }
 
+.commentHeader {
+    padding-top: 5px;
+    font-size: 20px;
+    padding-bottom: 5px;
+}
+
 img#spinner {
     position: fixed;
     top: 0;
