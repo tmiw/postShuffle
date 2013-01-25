@@ -568,12 +568,67 @@ $(function(){
         },
         
         events: {
-            'click .logoutLink': 'submitLogoutRequest'
+            'click .logoutLink': 'submitLogoutRequest',
+            'click .selfTitle': 'makeTitleEditable'
         },
         
         render: function() {
           this.$el.html(this.template(window.app.user));
           return this;
+        },
+        
+        makeTitleEditable: function() {
+            this.$(".selfTitle").wrap(function() {
+                return "<input class='selfTitleEditField' type='text' value='" + $(this).text() + "'>";
+            });
+            delete this.events['click .selfTitle'];
+            this.events['keydown .selfTitleEditField'] = 'formKeyDown';
+            this.delegateEvents();
+        },
+        
+        formKeyDown: function(e) {
+            if (e.which == 13)
+            {
+                this.submitTitleChangeRequest();
+            }
+        },
+        
+        submitTitleChangeRequest: function() {
+            var title = $('.selfTitleEditField').val();
+            var self = this;
+            
+            if (!title)
+            {
+                // TODO: correct dialog template.
+                $( "#registrationMissingFieldsError" ).dialog("open");
+            }
+            else
+            {
+                $.ajax('/user/title', {
+                    type: "POST",
+                    data: {
+                        title: title
+                    },
+                    cache: false
+                }).success(function(data, textStatus, xhr) {
+                    if (data.status == "ok")
+                    {
+                        // edit successful, unwrap text field
+                        $(".selfTitle").unwrap();
+                        $(".selfTitle").empty();
+                        $(".selfTitle").text(title);
+                        self.events['click .selfTitle'] = 'makeTitleEditable';
+                        delete self.events['keydown .selfTitleEditField'];
+                        self.delegateEvents();
+                    }
+                    else
+                    {
+                        $( "#communicationErrorDialog" ).dialog("open");
+                    }
+                }).error(function(xhr, textStatus, errorThrown) {
+                    $( "#communicationErrorDialog" ).dialog("open");
+                });
+            }
         },
         
         submitLogoutRequest: function() {

@@ -27,6 +27,7 @@ module.exports = (function() {
         this.__app.get("/user/login", this.json(this.login));
         this.__app.post("/user/register", this.json(this.register));
         this.__app.post("/user/reset_password", this.json(this.reset_password));
+        this.__app.post("/user/title", this.json(this.change_title));
         this.__app.get("/user/logout", this.logout);
         this.__app.get(/^\/user\/confirm\/([A-Fa-f0-9\-]+)$/, this.confirm_register);
     };
@@ -80,6 +81,53 @@ module.exports = (function() {
         res.send({ 'status': 'ok' });
     };
     
+    /**
+     * Sets a new title for the user.
+     * @param {Object} json_args Dictionary of arguments (title).
+     * @param {Object} session_data Session data.
+     * @param {Object} query_args Query string arguments.
+     * @param {Object} params List of URL parameters.
+     * @returns {Array} Data corresponding to the logged in user.
+     */
+    User.prototype.change_title = function(json_args, session_data, query_args, params) {
+        var self = this;
+        var title = json_args.title || query_args.title;
+        
+        if (!session_data.user)
+        {
+            self.emitFailure("Must be logged in.");
+        }
+        else
+        {
+            if (!title)
+            {
+                self.emitFailure("Must provide new username.");
+            }
+            else
+            {
+                DataModel.Users.findAll({
+                    where: {
+                        username: session_data.user.username
+                    }
+                }).success(function(u_list) {
+                    if (!u_list || u_list.length === 0)
+                    {
+                        self.emitFailure("Cannot find user.");
+                    }
+                    
+                    session_data.user.title = title;
+                    u_list[0].title = title;
+                    u_list[0].save()
+                             .success(function() { self.emitSuccess({}); })
+                             .error(function(err) {
+                                self.emitFailure(err);
+                             });
+                }).error(function(err) { self.emitFailure(err); });
+            }
+        }
+        return self;
+    };
+        
     /**
      * Resets user's password.
      * @param {Object} json_args Dictionary of arguments (username).
