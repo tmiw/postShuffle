@@ -283,7 +283,7 @@ module.exports = (function() {
                             var containsItem = false;
                             for (var j in tagObjs)
                             {
-                                if (j.tag == tags[k].tag)
+                                if (tagObjs[j].tag == tags[k])
                                 {
                                     containsItem = true;
                                     break;
