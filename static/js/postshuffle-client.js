@@ -679,6 +679,7 @@ $(function(){
         },
         
         loadMore: function() {
+            this.dontClear = true; // TBD
             window.Posts.fetch({
                 data: {offset: window.Posts.length},
                 add: true});
@@ -708,7 +709,14 @@ $(function(){
         
         addAll: function() {
             var self = this;
-            self.$("#postList").empty();
+            if (!self.dontClear)
+            {
+                self.$("#postList").empty();
+            }
+            else
+            {
+                self.dontClear = false;
+            }
             window.postViews = [];
             if (window.Posts.length > 0)
             {
