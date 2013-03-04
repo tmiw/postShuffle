@@ -88,7 +88,9 @@ li.post .postRight {
 
 .selfTitle {
     display: inline;
+    text-decoration: underline;
 }
+
 img#spinner {
     position: fixed;
     top: 0;
