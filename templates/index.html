@@ -100,13 +100,14 @@
 <div id="app">
     <div id="topbar">
     </div>
-    <h1>title here</h1>
+    <h1>postShuffle</h1>
     <img src="/static/img/ajax-loader.gif" id="spinner" />
     <ul id="postList">
     </ul>
     <div class="moreLink"><a href="#">load more</a></div>
     <div id="newPost">
         <form id="newPostForm">
+            <h2>New Post</h2>
             Title: <input type="text" id="title" size="50" value="" /><br/>
             Body: <textarea id="body" rows="5" cols="50"></textarea><br/>
             Tags: <input type="text" id="tagBox" /><ul class="postTags"></ul><br />
@@ -227,7 +228,7 @@
         <ul class="comments"></ul>
         <div class="moreLink"><a href="#">load more</a></div>
         <form class="commentForm">
-            New comment:<br/>
+            <h2>New comment:</h2>
             Body: <textarea class="commentBodyField" rows="5" cols="50"></textarea><br/>
             <input type="button" class="addCommentButton" value="Add" />
         </form>
@@ -244,6 +245,7 @@
 welcome <%- username %>, <div class="selfTitle"><%- title %></div>. <a href="#" class="logoutLink">logout</a> | <a href="#" class="editUserLink">edit info</a>
 </div>
 <div class="profileDialog">
+    <h2>Edit user info:</h2>
     <form id="profileForm">
         New email: <input type="text" class="profileEmailField" /><br />
         <hr noshade />
