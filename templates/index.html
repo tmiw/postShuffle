@@ -67,6 +67,11 @@
                 buttons: { OK: function() { $( this ).dialog( "close" ); } } 
             });
             
+            $( "#profileEditSuccessfulMessage" ).dialog({ 
+                autoOpen: false,
+                buttons: { OK: function() { $( this ).dialog( "close" ); } } 
+            });
+            
             $( "#resetSuccessfulMessage" ).dialog({ 
                 autoOpen: false,
                 buttons: { OK: function() { $( this ).dialog( "close" ); } } 
@@ -120,6 +125,10 @@
 
 <div id="registrationSuccessfulMessage" title="Registration Successful">
     Check your email for further instructions.
+</div>
+
+<div id="profileEditSuccessfulMessage" title="Edit Successful">
+    Thanks for keeping us in the loop!
 </div>
 
 <div id="resetSuccessfulMessage" title="Password Reset Successful">
@@ -232,7 +241,16 @@
 
 <script type="text/template" id="userBarTemplate">
 <div class="loginBox">
-welcome <%- username %>, <div class="selfTitle"><%- title %></div>. <a href="#" class="logoutLink">logout</a>
+welcome <%- username %>, <div class="selfTitle"><%- title %></div>. <a href="#" class="logoutLink">logout</a> | <a href="#" class="editUserLink">edit info</a>
+</div>
+<div class="profileDialog">
+    <form id="profileForm">
+        New email: <input type="text" class="profileEmailField" /><br />
+        <hr noshade />
+        New password (only if changing it): <input type="password" class="profilePasswordField" /><br />
+        Confirm new password: <input type="password" class="profileConfirmPasswordField" /><br />
+        <input type="button" class="editButton" value="change" /> <input type="reset" value="reset" />
+    </form>
 </div>
 </script>
 

@@ -569,12 +569,64 @@ $(function(){
         
         events: {
             'click .logoutLink': 'submitLogoutRequest',
-            'click .selfTitle': 'makeTitleEditable'
+            'click .selfTitle': 'makeTitleEditable',
+            'click .editUserLink': 'toggleProfileEditor',
+            'click .editButton': 'submitEditRequest'
         },
         
         render: function() {
           this.$el.html(this.template(window.app.user));
           return this;
+        },
+        
+        toggleProfileEditor: function() {
+            if (this.$('.profileDialog').css("display") != "block")
+            {
+                this.$('.profileDialog').css("display", "block");
+            }
+            else
+            {
+                this.$('.profileDialog').css("display", "none");
+            }
+        },
+        
+        submitEditRequest: function() {
+            var password = this.$(".profilePasswordField").val();
+            var email = this.$(".profileEmailField").val();
+            var confirmPassword = this.$(".profileConfirmPasswordField").val();
+            
+            if (!email)
+            {
+                $( "#registrationMissingFieldsError" ).dialog("open");
+            }
+            else if (confirmPassword != password)
+            {
+                $( "#registrationMatchingFieldsError" ).dialog("open");
+            }
+            else
+            {
+                $.ajax('/user/set_profile', {
+                    type: "POST",
+                    data: {
+                        password: password,
+                        repeat_password: confirmPassword,
+                        email: email
+                    },
+                    cache: false
+                }).success(function(data, textStatus, xhr) {
+                    if (data.status == "ok")
+                    {
+                        // register successful
+                        $( "#profileEditSuccessfulMessage" ).dialog("open");
+                    }
+                    else
+                    {
+                        $( "#internalErrorDialog" ).dialog("open");
+                    }
+                }).error(function(xhr, textStatus, errorThrown) {
+                    $( "#communicationErrorDialog" ).dialog("open");
+                });
+            }
         },
         
         makeTitleEditable: function() {

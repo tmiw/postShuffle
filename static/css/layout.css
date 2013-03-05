@@ -65,6 +65,10 @@ li.post .postRight {
     display: none;
 }
 
+.profileDialog {
+    display: none;
+}
+
 .postTag a {
     color: white;
     text-decoration: none;
