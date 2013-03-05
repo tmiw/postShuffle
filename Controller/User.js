@@ -2,6 +2,7 @@
 // Copyright (c) 2012 Mooneer Salem
 
 var ControllerBase = require("../Utility/ControllerBase");
+var Passwords      = require("../Utility/Passwords");
 var util           = require("util");
 var DataModel      = require("../DataModel");
 var AppConfig      = require('../AppConfig.js');
@@ -125,7 +126,7 @@ module.exports = (function() {
                     
                     if (password !== "")
                     {
-                        u_list[0].password = password;
+                        u_list[0].password = Passwords.hash(password);
                     }
                     u_list[0].email = email;
                     u_list[0].save()
@@ -218,13 +219,14 @@ module.exports = (function() {
                     // Reset password.
                     var user = u_list[0];
                     var oldpw = user.password;
-                    user.password = generator.randomString();
+                    var newpw = generator.randomString();
+                    user.password = Passwords.hash(newpw)
                     user.save().success(function() {
                         consolidate.mustache(
                             __dirname + "/../templates/email/reset_password.html",
                             {
                                 username: username,
-                                new_password: user.password
+                                new_password: newpw
                             },
                             function(err, html)
                             {
@@ -320,7 +322,7 @@ module.exports = (function() {
                         
                         DataModel.Users.create({
                             username: username,
-                            password: password,
+                            password: Passwords.hash(password),
                             is_moderator: false,
                             is_admin: false,
                             title: AppConfig.defaultTitle,
@@ -403,7 +405,7 @@ module.exports = (function() {
         DataModel.Users.findAll({
             where: {
                 username: username,
-                password: password
+                password: Passwords.hash(password)
             }
         }).success(function(users) {
             if (!users || users.length === 0) 
