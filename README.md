@@ -4,6 +4,6 @@ by client-side code).
 
 # Installation
 
-1. npm install postShuffle
+1. npm install postshuffle
 2. vim AppConfig.js # Update all variables in this file as appropriate.
 3. node main.js
