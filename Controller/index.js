@@ -28,7 +28,7 @@ module.exports = (function() {
     /**
      * Links controller's routes to application.
      */
-    Controller.prototype.link_routes = function() { 
+    Controller.prototype.link_routes = function(base_dir) { 
         this.Post.link_routes();
         this.Tag.link_routes();
         this.Comment.link_routes();
@@ -39,13 +39,13 @@ module.exports = (function() {
         this.__app.get(
             /^\/static\/js\/backbone.js$/, 
             function (req, res) {
-                res.sendfile("node_modules/backbone/backbone.js");
+                res.sendfile(base_dir + "/node_modules/backbone/backbone.js");
             });
         
         this.__app.get(
             /^\/static\/js\/underscore.js$/, 
             function (req, res) {
-                res.sendfile("node_modules/backbone/node_modules/underscore/underscore.js");
+                res.sendfile(base_dir + "/node_modules/backbone/node_modules/underscore/underscore.js");
             });
     };
     

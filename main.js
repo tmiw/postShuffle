@@ -20,7 +20,7 @@ var database = require(__dirname + '/DataModel');
 
 // Initialize controller.
 var controller = new Controller(app);
-controller.link_routes();
+controller.link_routes(__dirname);
 
 // Initialize template engine.
 app.engine('html', consolidate.mustache);
