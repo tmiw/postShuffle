@@ -6,4 +6,4 @@ by client-side code).
 
 1. npm install postshuffle
 2. vim AppConfig.js # Update all variables in this file as appropriate.
-3. node main.js
+3. PORT=8080 node main.js # Change PORT= to whatever you'd like.
