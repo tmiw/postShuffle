@@ -1,7 +1,7 @@
 {
   "name": "postshuffle",
   "description": "node.js based forum software",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Mooneer Salem <mooneer@gmail.com>",
   "contributors": [ 
   ],
