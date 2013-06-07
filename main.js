@@ -28,4 +28,10 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/templates');
 
 // Begin listening for connections.
-app.listen(process.env.PORT);
+var portNumber = process.env.PORT;
+if (!portNumber)
+{
+    // Default to 8080 if not specified.
+    portNumber = 8080;
+}
+app.listen(8080);
