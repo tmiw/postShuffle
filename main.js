@@ -8,12 +8,20 @@ var AppConfig = require('./AppConfig.js');
 var consolidate = require('consolidate');
 
 // Initialize Express middleware.
-app.use(express.compress());
-app.use(express.bodyParser());
-app.use(express.cookieParser(AppConfig.sessionSecret));
-app.use(express.session());
-app.use('/static', express.directory(__dirname + '/static'));
-app.use('/static', express.static(__dirname + '/static'));
+var compression = require('compression')
+var bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser')
+var expressSession = require('express-session')
+var serveIndex = require('serve-index')
+var serveStatic = require('serve-static')
+
+app.use(compression());
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.use(cookieParser(AppConfig.sessionSecret, {}));
+app.use(expressSession());
+app.use('/static', serveIndex(__dirname + '/static'));
+app.use('/static', serveStatic(__dirname + '/static'));
 
 // Triggers initialization of database.
 var database = require(__dirname + '/DataModel');

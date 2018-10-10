@@ -89,9 +89,9 @@ module.exports = (function() {
                 where: {
                     username: session_data.user.username
                 }
-            }).success(function(users) {
+            }).then(function(users) {
                 var user = users[0];
-                DataModel.Posts.find(postId).success(function(post) {
+                DataModel.Posts.find(postId).then(function(post) {
                     if (
                         post.UserId != user.id &&
                         !user.is_moderator &&
@@ -101,7 +101,7 @@ module.exports = (function() {
                     }
                     else
                     {
-                        post.getComments().success(function(comments) {
+                        post.getComments().then(function(comments) {
                             var chainer = new Sequelize.Utils.QueryChainer();
                             for (var i in comments)
                             {
@@ -109,7 +109,7 @@ module.exports = (function() {
                             }
                             
                             chainer.add(post.destroy());
-                            chainer.runSerially({ skipOnError: true }).success(function() {
+                            chainer.runSerially({ skipOnError: true }).then(function() {
                                 self.emitSuccess({});
                             }).error(error_f);
                         }).error(error_f);
@@ -147,9 +147,9 @@ module.exports = (function() {
                 where: {
                     username: session_data.user.username
                 }
-            }).success(function(users) {
+            }).then(function(users) {
                 var user = users[0];
-                DataModel.Posts.find(postId).success(function(post) {
+                DataModel.Posts.find(postId).then(function(post) {
                     if (
                         post.UserId != user.id &&
                         !user.is_moderator &&
@@ -160,8 +160,8 @@ module.exports = (function() {
                     else
                     {
                         post.body = json_args.body;
-                        post.save().success(function() {
-                            post.getTags().success(function(t) {
+                        post.save().then(function() {
+                            post.getTags().then(function(t) {
                                 var tags = [];
                                 for (var i in t)
                                 {
@@ -218,26 +218,28 @@ module.exports = (function() {
                 where: {
                     username: session_data.user.username
                 }
-            }).success(function(users) {
+            }).then(function(users) {
                 var user = users[0];
                 DataModel.Posts.create({
                     'title': json_args.title,
                     'body': json_args.body,
                     'UserId': session_data.user.id
-                }).success(function(post) {
-                    DataModel.Tags.findAll({where: {'tag': tags}}).success(function(tagObjs) {
+                }).then(function(post) {
+                    DataModel.Tags.findAll({where: {'tag': tags}}).then(function(tagObjs) {
                         var non_exist_list = [];
                         
                         var tag_exist_f = function() {
                             // Add the tags that exist.
-                            var chainer = new Sequelize.Utils.QueryChainer();
+                            var chainer = null;
                             for (var i in tagObjs)
                             {
-                                chainer.add(post.addTag(tagObjs[i]));
+                                if (!chainer) chainer = post.addTag(tagObjs[i]);
+                                else chainer = chainer.then(function() { return post.addTag(tagObjs[i]); });
                             }
-                            
-                            chainer.add(user.addPost(post));
-                            chainer.runSerially({ skipOnError: true }).success(function() {
+                           
+                            if (!chainer) chainer = user.addPost(post);
+                            else chainer = chainer.then(function() { return user.addPost(post); });
+                            chainer.then(function() {
                                 self.emitSuccess({
                                     'tags': tags,
                                     'title': post.title,
@@ -261,8 +263,8 @@ module.exports = (function() {
                         {
                             DataModel.Tags.create({
                                 tag: tag
-                            }).success(function(t) {
-                                post.addTag(t).success(function() {
+                            }).then(function(t) {
+                                post.addTag(t).then(function() {
                                     if (idx + 1 < non_exist_list.length)
                                     {
                                         tag_f(idx + 1, non_exist_list[idx + 1]);
@@ -326,7 +328,7 @@ module.exports = (function() {
         
         var query = {
             'offset': offset, 
-            'order': 'createdAt DESC'
+            'order': [['createdAt', 'DESC']]
         };
         
         if (!post_id)
@@ -349,8 +351,8 @@ module.exports = (function() {
                     tag_strings.push(tags[i].tag);
                 }
                 
-                list[idx].getUser().success(function(u) {
-                    list[idx].getComments().success(function(c) {
+                list[idx].getUser().then(function(u) {
+                    list[idx].getComments().then(function(c) {
                         result.push({
                             'tags': tag_strings,
                             'title': list[idx].title,
@@ -370,7 +372,7 @@ module.exports = (function() {
                         
                         if (idx + 1 < list.length)
                         {
-                            list[idx + 1].getTags().success(function(v) {
+                            list[idx + 1].getTags().then(function(v) {
                                 tag_f(idx + 1, v);
                             }).error(failure_f);
                         }
@@ -387,7 +389,7 @@ module.exports = (function() {
             // recursive. not sure if this is good for large result sets.
             if (list.length > 0)
             {
-                list[0].getTags().success(function(v) {
+                list[0].getTags().then(function(v) {
                     tag_f(0, v);
                 }).error(failure_f);
             }
@@ -405,7 +407,7 @@ module.exports = (function() {
             query.where = {
                 'Tags.tag': tag_list
             };
-            DataModel.Posts.findAll(query).success(success_f).error(failure_f);
+            DataModel.Posts.findAll(query).then(success_f).error(failure_f);
         }
         else
         {
@@ -414,9 +416,9 @@ module.exports = (function() {
                 // Grab all posts that are the current post and newer.
                 // TODO: we probably don't want to grab this much if we're
                 // a busy forum.
-                query.where = ['id >= ?', post_id];
+                query.where = {'id': {[Op.gte]: post_id}};
             }
-            DataModel.Posts.findAll(query).success(success_f).error(failure_f);
+            DataModel.Posts.findAll(query).then(success_f).error(failure_f);
         }
         
         return self;

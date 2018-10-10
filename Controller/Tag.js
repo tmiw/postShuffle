@@ -4,6 +4,9 @@
 var ControllerBase = require("../Utility/ControllerBase");
 var util           = require("util");
 var DataModel      = require("../DataModel");
+var Sequelize      = require('sequelize');
+
+const Op = Sequelize.Op
 
 module.exports = (function() {
     /**
@@ -43,8 +46,8 @@ module.exports = (function() {
         
         var term_start = req.query.term || "";
         DataModel.Tags.findAll({
-            where: ['tag LIKE ?', term_start + "%"]
-        }).success(success_f);
+            where: {'tag': {[Op.like]: term_start + "%"}}
+        }).then(success_f);
     };
     
     return Tag;

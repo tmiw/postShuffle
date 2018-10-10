@@ -39,14 +39,14 @@ exports.Users.hasMany(exports.Posts);
 exports.Posts.hasMany(exports.Tags);
 exports.Posts.hasMany(exports.Comments);
 exports.Posts.belongsTo(exports.Users);
-exports.Tags.hasMany(exports.Posts);
+//exports.Tags.hasMany(exports.Posts);
 exports.Comments.hasOne(exports.Comments, {'as': 'Parent'});
 exports.Comments.belongsTo(exports.Users);
 
 var Passwords = require(__dirname + "/Utility/Passwords.js");
 var generator = require(__dirname + "/Utility/RandomGenerators.js");
-db.sync().success(function() {
-    exports.Users.findAll({limit: 1}).success(function(result) {
+db.sync().then(function() {
+    exports.Users.findAll({limit: 1}).then(function(result) {
         if (!result || result.length === 0)
         {
             // first run.
@@ -58,7 +58,7 @@ db.sync().success(function() {
                 is_admin: true,
                 title: AppConfig.defaultTitle,
                 email: AppConfig.admin_email
-            }).success(function(u) {
+            }).then(function(u) {
                 console.log("============= FIRST RUN  =============");
                 console.log("Your admin user is as follows:");
                 console.log("   Username: admin");

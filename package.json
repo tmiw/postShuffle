@@ -3,18 +3,25 @@
   "description": "node.js based forum software",
   "version": "0.1.2",
   "author": "Mooneer Salem <mooneer@gmail.com>",
-  "contributors": [ 
-  ],
+  "contributors": [],
   "dependencies": {
-    "express": "3.0.x",
-    "sequelize": "1.6.0-alpha-3",
-    "sqlite3": ">=2.0.0",
     "backbone": "0.9.x",
     "consolidate": "0.5.x",
-    "mustache": "0.7.x",
-    "nodemailer": "0.3.x"
+    "express": "^4.16.3",
+    "mustache": "^3.0.0",
+    "nodemailer": "0.3.x",
+    "sequelize": "^4.39.0",
+    "sqlite3": ">=2.0.0",
+    "compression": "1.7.x",
+    "body-parser": "1.18.x",
+    "cookie-parser": "1.4.x",
+    "express-session": "1.15.x",
+    "serve-index": "1.9.x",
+    "serve-static": "1.13.x"
   },
   "repository": "git://github.com/tmiw/postShuffle",
-  "engines": { "node": "*" },
+  "engines": {
+    "node": "*"
+  },
   "main": "main.js"
 }

@@ -56,9 +56,9 @@ module.exports = (function() {
                 where: {
                     username: session_data.user.username
                 }
-            }).success(function(users) {
+            }).then(function(users) {
                 var user = users[0];
-                DataModel.Comments.find(commentId).success(function(comment) {
+                DataModel.Comments.find(commentId).then(function(comment) {
                     if (comment.UserId != user.id &&
                         !user.is_moderator &&
                         !user.is_admin)
@@ -68,7 +68,7 @@ module.exports = (function() {
                     else
                     {
                         comment.body = json_args.body;
-                        comment.save().success(function() {
+                        comment.save().then(function() {
                             self.emitSuccess({
                                 'author': {
                                     'username': user.username,
@@ -115,9 +115,9 @@ module.exports = (function() {
                 where: {
                     username: session_data.user.username
                 }
-            }).success(function(users) {
+            }).then(function(users) {
                 var user = users[0];
-                DataModel.Comments.find(commentId).success(function(comment) {
+                DataModel.Comments.find(commentId).then(function(comment) {
                     if (comment.UserId != user.id &&
                         !user.is_moderator &&
                         !user.is_admin)
@@ -126,7 +126,7 @@ module.exports = (function() {
                     }
                     else
                     {
-                        comment.destroy().success(function() {
+                        comment.destroy().then(function() {
                             self.emitSuccess({});
                         }).error(error_f);
                     }
@@ -164,7 +164,7 @@ module.exports = (function() {
         else 
         {
             // TODO: find valid user.
-            DataModel.Posts.find(post_id).success(function(post) {
+            DataModel.Posts.find(post_id).then(function(post) {
                 if (!post) 
                 {
                     error_f("Could not find post " + post_id);
@@ -175,7 +175,7 @@ module.exports = (function() {
                         where: {
                             username: session_data.user.username
                         }
-                    }).success(function(users) {
+                    }).then(function(users) {
                         if (!users || users.length === 0) 
                         {
                             error_f("Invaid user.");
@@ -185,9 +185,9 @@ module.exports = (function() {
                             var user = users[0];
                             DataModel.Comments.create({
                                 'body': json_args.body
-                            }).success(function(comment) {
-                                post.addComment(comment).success(function() {
-                                    user.addComment(comment).success(function() {
+                            }).then(function(comment) {
+                                post.addComment(comment).then(function() {
+                                    user.addComment(comment).then(function() {
                                         self.emitSuccess({
                                             'author': {
                                                 'username': user.username,
@@ -229,15 +229,15 @@ module.exports = (function() {
         var query = {
             'offset': offset, 
             'limit': 5,
-            'order': 'createdAt DESC',
+            'order': [['createdAt', 'DESC']],
             'where': {'PostId': post_id}
         };
         
-        var failure_f = function(err) {
+        var error_f = function(err) {
             self.emitFailure(err);
         };
         
-        DataModel.Comments.findAll(query).success(function(comments) {
+        DataModel.Comments.findAll(query).then(function(comments) {
             var result = [];
             var success_f = function(u, idx) {
                 result.push({
@@ -256,9 +256,9 @@ module.exports = (function() {
                 
                 if (idx + 1 < comments.length)
                 {
-                    comments[idx + 1].getUser().success(function(user) {
+                    comments[idx + 1].getUser().then(function(user) {
                         success_f(user, idx + 1);
-                    }).failure(failure_f);
+                    }).error(error_f);
                 }
                 else
                 {
@@ -270,9 +270,9 @@ module.exports = (function() {
             
             if (comments.length > 0)
             {
-                comments[0].getUser().success(function(user) {
+                comments[0].getUser().then(function(user) {
                     success_f(user, 0);
-                }).failure(failure_f);
+                }).error(error_f);
             }
             else
             {
@@ -280,7 +280,7 @@ module.exports = (function() {
                     'comments': result
                 });
             }
-        }).failure(failure_f);
+        }).error(error_f);
         
         return self;
     };

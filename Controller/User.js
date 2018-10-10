@@ -48,7 +48,7 @@ module.exports = (function() {
         DataModel.Users.findAll({
             where: {
                 confirmation_code: uuid
-            }}).success(function(u_list) {
+            }}).then(function(u_list) {
                 if (!u_list || u_list.length !== 1)
                 {
                     res.send(404);
@@ -57,7 +57,7 @@ module.exports = (function() {
                 {
                     var user = u_list[0];
                     user.confirmation_code = '';
-                    user.save().success(function() {
+                    user.save().then(function() {
                         req.session.user = {
                             'username': user.username,
                             'title': user.title,
@@ -118,7 +118,7 @@ module.exports = (function() {
                     where: {
                         username: session_data.user.username
                     }
-                }).success(function(u_list) {
+                }).then(function(u_list) {
                     if (!u_list || u_list.length === 0)
                     {
                         self.emitFailure("Cannot find user.");
@@ -130,7 +130,7 @@ module.exports = (function() {
                     }
                     u_list[0].email = email;
                     u_list[0].save()
-                             .success(function() { self.emitSuccess({}); })
+                             .then(function() { self.emitSuccess({}); })
                              .error(function(err) {
                                 self.emitFailure(err);
                              });
@@ -168,7 +168,7 @@ module.exports = (function() {
                     where: {
                         username: session_data.user.username
                     }
-                }).success(function(u_list) {
+                }).then(function(u_list) {
                     if (!u_list || u_list.length === 0)
                     {
                         self.emitFailure("Cannot find user.");
@@ -177,7 +177,7 @@ module.exports = (function() {
                     session_data.user.title = title;
                     u_list[0].title = title;
                     u_list[0].save()
-                             .success(function() { self.emitSuccess({}); })
+                             .then(function() { self.emitSuccess({}); })
                              .error(function(err) {
                                 self.emitFailure(err);
                              });
@@ -209,7 +209,7 @@ module.exports = (function() {
                 where: {
                     username: username
                 }
-            }).success(function(u_list) {
+            }).then(function(u_list) {
                 if (!u_list || u_list.length === 0)
                 {
                     self.emitFailure("Cannot find user.");
@@ -221,7 +221,7 @@ module.exports = (function() {
                     var oldpw = user.password;
                     var newpw = generator.randomString();
                     user.password = Passwords.hash(newpw)
-                    user.save().success(function() {
+                    user.save().then(function() {
                         consolidate.mustache(
                             __dirname + "/../templates/email/reset_password.html",
                             {
@@ -233,7 +233,7 @@ module.exports = (function() {
                                 if (err)
                                 {
                                     user.password = oldpw;
-                                    user.save().success(function() {
+                                    user.save().then(function() {
                                         self.emitFailure(err);
                                     }).error(function(e) {
                                         self.emitFailure(e);
@@ -251,7 +251,7 @@ module.exports = (function() {
                                         if (err)
                                         {
                                             user.password = oldpw;
-                                            user.save().success(function() {
+                                            user.save().then(function() {
                                                 self.emitFailure(err);
                                             }).error(function(e) {
                                                 self.emitFailure(e);
@@ -310,7 +310,7 @@ module.exports = (function() {
                     where: {
                         username: username
                     }
-                }).success(function(u_list) {
+                }).then(function(u_list) {
                     if (u_list && u_list.length > 0)
                     {
                         self.emitFailure("Username already exists.");
@@ -328,7 +328,7 @@ module.exports = (function() {
                             title: AppConfig.defaultTitle,
                             confirmation_code: uuid,
                             email: email
-                        }).success(function(u) {
+                        }).then(function(u) {
                             // TODO: send confirmation email.
                             consolidate.mustache(
                                 __dirname + "/../templates/email/register_confirm.html",
@@ -340,7 +340,7 @@ module.exports = (function() {
                                 {
                                     if (err)
                                     {
-                                        u.destroy().success(function() {
+                                        u.destroy().then(function() {
                                             self.emitFailure(err);
                                         }).error(function(err) {
                                             self.emitFailure(err);
@@ -357,7 +357,7 @@ module.exports = (function() {
                                         }, function(err, res) {
                                             if (err)
                                             {
-                                                u.destroy().success(function() {
+                                                u.destroy().then(function() {
                                                     self.emitFailure(err);
                                                 }).error(function(err) {
                                                     self.emitFailure(err);
@@ -407,7 +407,7 @@ module.exports = (function() {
                 username: username,
                 password: Passwords.hash(password)
             }
-        }).success(function(users) {
+        }).then(function(users) {
             if (!users || users.length === 0) 
             {
                 error_f("Invalid username or password.");
