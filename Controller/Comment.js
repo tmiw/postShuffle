@@ -82,10 +82,10 @@ module.exports = (function() {
                                 'create_date': comment.createdAt.toUTCString(),
                                 'update_date': comment.updatedAt.toUTCString()
                             });
-                        }).error(error_f);
+                        }).catch(error_f);
                     }
-                }).error(error_f);
-            }).error(error_f);
+                }).catch(error_f);
+            }).catch(error_f);
         }
         
         return this;
@@ -128,10 +128,10 @@ module.exports = (function() {
                     {
                         comment.destroy().then(function() {
                             self.emitSuccess({});
-                        }).error(error_f);
+                        }).catch(error_f);
                     }
-                }).error(error_f);
-            }).error(error_f);
+                }).catch(error_f);
+            }).catch(error_f);
         }
         
         return this;
@@ -201,13 +201,13 @@ module.exports = (function() {
                                             'create_date': comment.createdAt.toUTCString(),
                                             'update_date': comment.updatedAt.toUTCString()
                                         });
-                                    }).error(error_f);
-                                }).error(error_f);
-                            }).error(error_f);
+                                    }).catch(error_f);
+                                }).catch(error_f);
+                            }).catch(error_f);
                         }
-                    }).error(error_f);
+                    }).catch(error_f);
                 }
-            }).error(error_f);
+            }).catch(error_f);
         }
         
         return this;
@@ -258,7 +258,7 @@ module.exports = (function() {
                 {
                     comments[idx + 1].getUser().then(function(user) {
                         success_f(user, idx + 1);
-                    }).error(error_f);
+                    }).catch(error_f);
                 }
                 else
                 {
@@ -272,7 +272,7 @@ module.exports = (function() {
             {
                 comments[0].getUser().then(function(user) {
                     success_f(user, 0);
-                }).error(error_f);
+                }).catch(error_f);
             }
             else
             {
@@ -280,7 +280,7 @@ module.exports = (function() {
                     'comments': result
                 });
             }
-        }).error(error_f);
+        }).catch(error_f);
         
         return self;
     };

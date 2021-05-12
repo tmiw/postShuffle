@@ -65,7 +65,7 @@ db.sync().then(function() {
                 console.log("   Password: " + newpw);
                 console.log("KEEP THIS INFO IN A SAFE PLACE OR YOU WILL BE UNABLE TO ADMINISTER YOUR FORUM.");
                 console.log("============= /FIRST RUN =============");
-            }).error(function(err) {
+            }).catch(function(err) {
                 console.log("Cannot access database: " + err);
             });
         }

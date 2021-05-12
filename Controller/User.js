@@ -66,9 +66,9 @@ module.exports = (function() {
                             'joined': user.createdAt
                         };
                         res.redirect("/");
-                    }).error(fail_f);
+                    }).catch(fail_f);
                 }
-            }).error(fail_f);
+            }).catch(fail_f);
     };
     
     /**
@@ -131,10 +131,10 @@ module.exports = (function() {
                     u_list[0].email = email;
                     u_list[0].save()
                              .then(function() { self.emitSuccess({}); })
-                             .error(function(err) {
+                             .catch(function(err) {
                                 self.emitFailure(err);
                              });
-                }).error(function(err) { self.emitFailure(err); });
+                }).catch(function(err) { self.emitFailure(err); });
             }
         }
         return self;
@@ -178,10 +178,10 @@ module.exports = (function() {
                     u_list[0].title = title;
                     u_list[0].save()
                              .then(function() { self.emitSuccess({}); })
-                             .error(function(err) {
+                             .catch(function(err) {
                                 self.emitFailure(err);
                              });
-                }).error(function(err) { self.emitFailure(err); });
+                }).catch(function(err) { self.emitFailure(err); });
             }
         }
         return self;
@@ -235,7 +235,7 @@ module.exports = (function() {
                                     user.password = oldpw;
                                     user.save().then(function() {
                                         self.emitFailure(err);
-                                    }).error(function(e) {
+                                    }).catch(function(e) {
                                         self.emitFailure(e);
                                     });
                                 }
@@ -253,7 +253,7 @@ module.exports = (function() {
                                             user.password = oldpw;
                                             user.save().then(function() {
                                                 self.emitFailure(err);
-                                            }).error(function(e) {
+                                            }).catch(function(e) {
                                                 self.emitFailure(e);
                                             });
                                         }
@@ -264,11 +264,11 @@ module.exports = (function() {
                                     });
                                 }
                             });
-                    }).error(function(err) {
+                    }).catch(function(err) {
                         self.emitFailure(err);
                     });
                 }
-            }).error(function(err) {
+            }).catch(function(err) {
                 self.emitFailure(err);
             });
         }
@@ -342,7 +342,7 @@ module.exports = (function() {
                                     {
                                         u.destroy().then(function() {
                                             self.emitFailure(err);
-                                        }).error(function(err) {
+                                        }).catch(function(err) {
                                             self.emitFailure(err);
                                         });
                                     }
@@ -359,7 +359,7 @@ module.exports = (function() {
                                             {
                                                 u.destroy().then(function() {
                                                     self.emitFailure(err);
-                                                }).error(function(err) {
+                                                }).catch(function(err) {
                                                     self.emitFailure(err);
                                                 });
                                             }
@@ -370,11 +370,11 @@ module.exports = (function() {
                                         });
                                     }
                                 });
-                        }).error(function(err) {
+                        }).catch(function(err) {
                             self.emitFailure(err);
                         });
                     }
-                }).error(function(err) {
+                }).catch(function(err) {
                     self.emitFailure(err);
                 });
             }
@@ -424,7 +424,7 @@ module.exports = (function() {
                                 };
                 self.emitSuccess(session_data.user);
             }
-        }).error(error_f);
+        }).catch(error_f);
         
         return self;
     };

@@ -5,6 +5,7 @@ var ControllerBase = require("../Utility/ControllerBase");
 var util           = require("util");
 var DataModel      = require("../DataModel");
 var Sequelize      = require('sequelize');
+const Op           = Sequelize.Op;
 
 module.exports = (function() {
     /**
@@ -111,11 +112,11 @@ module.exports = (function() {
                             chainer.add(post.destroy());
                             chainer.runSerially({ skipOnError: true }).then(function() {
                                 self.emitSuccess({});
-                            }).error(error_f);
-                        }).error(error_f);
+                            }).catch(error_f);
+                        }).catch(error_f);
                     }
-                }).error(error_f);
-            }).error(error_f);
+                }).catch(error_f);
+            }).catch(error_f);
         }
     };
     
@@ -183,11 +184,11 @@ module.exports = (function() {
                                     'update_date': post.updatedAt.toUTCString(),
                                     'num_comments': 0 // TODO
                                 });
-                            }).error(error_f);
-                        }).error(error_f);
+                            }).catch(error_f);
+                        }).catch(error_f);
                     }
-                }).error(error_f);
-            }).error(error_f);
+                }).catch(error_f);
+            }).catch(error_f);
         }
     };
     
@@ -256,7 +257,7 @@ module.exports = (function() {
                                     'update_date': post.updatedAt.toUTCString(),
                                     'num_comments': 0
                                 });
-                            }).error(error_f);
+                            }).catch(error_f);
                         };
                         
                         var tag_f = function(idx, tag)
@@ -273,8 +274,8 @@ module.exports = (function() {
                                     {
                                         tag_exist_f();
                                     }
-                                }).error(error_f);
-                            }).error(error_f);
+                                }).catch(error_f);
+                            }).catch(error_f);
                         };
                         
                         // Find and add the tags that don't already exist.
@@ -374,7 +375,7 @@ module.exports = (function() {
                         {
                             list[idx + 1].getTags().then(function(v) {
                                 tag_f(idx + 1, v);
-                            }).error(failure_f);
+                            }).catch(failure_f);
                         }
                         else 
                         {
@@ -382,8 +383,8 @@ module.exports = (function() {
                                 'posts': result
                             });
                         }
-                    }).error(failure_f);
-                }).error(failure_f);
+                    }).catch(failure_f);
+                }).catch(failure_f);
             };
             
             // recursive. not sure if this is good for large result sets.
@@ -391,7 +392,7 @@ module.exports = (function() {
             {
                 list[0].getTags().then(function(v) {
                     tag_f(0, v);
-                }).error(failure_f);
+                }).catch(failure_f);
             }
             else 
             {
@@ -407,7 +408,7 @@ module.exports = (function() {
             query.where = {
                 'Tags.tag': tag_list
             };
-            DataModel.Posts.findAll(query).then(success_f).error(failure_f);
+            DataModel.Posts.findAll(query).then(success_f).catch(failure_f);
         }
         else
         {
@@ -418,7 +419,7 @@ module.exports = (function() {
                 // a busy forum.
                 query.where = {'id': {[Op.gte]: post_id}};
             }
-            DataModel.Posts.findAll(query).then(success_f).error(failure_f);
+            DataModel.Posts.findAll(query).then(success_f).catch(failure_f);
         }
         
         return self;
