@@ -2,6 +2,7 @@
 // Copyright (c) 2012 Mooneer Salem
 
 var nodemailer = require("nodemailer");
+var htmlToText = require('nodemailer-html-to-text').htmlToText;
 
 var debugMode = true;
 
@@ -31,7 +32,10 @@ var settings = function() {
     // Perform initialization here so that we have a mailer accessible from
     // anywhere in the project. See Nodemailer documentation for setup
     // instructions.
-    this.mailer = nodemailer.createTransport("sendmail");
+    this.mailer = nodemailer.createTransport({
+        sendmail: true
+    });
+    this.mailer.use('compile', htmlToText());
     
     this.admin_email = "xyz@abc.def";
     this.mail_from = "postShuffle <xyz@abc.def>";
